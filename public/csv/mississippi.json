@@ -1,0 +1,179 @@
+[
+    {
+        "project_id": "Mississippi",
+        "cwms_01": {
+            "location_id": "LD 22 TW-Mississippi",
+            "tsid": "LD 22 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_02": {
+            "location_id": "Louisiana-Mississippi",
+            "tsid": "Louisiana-Mississippi.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_03": {
+            "location_id": "LD 24 Pool-Mississippi",
+            "tsid": "LD 24 Pool-Mississippi.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_04": {
+            "location_id": "LD 24 TW-Mississippi",
+            "tsid": "LD 24 TW-Mississippi.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_05": {
+            "location_id": "Mosier Ldg-Mississippi",
+            "tsid": "Mosier Ldg-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_06": {
+            "location_id": "LD 25 Pool-Mississippi",
+            "tsid": "LD 25 Pool-Mississippi.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_07": {
+            "location_id": "LD 25 TW-Mississippi",
+            "tsid": "LD 25 TW-Mississippi.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_08": {
+            "location_id": "Grafton-Mississippi",
+            "tsid": "Grafton-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_09": {
+            "location_id": "Alton-Mississippi",
+            "tsid": "Alton-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_10": {
+            "location_id": "Mel Price Pool-Mississippi",
+            "tsid": "Mel Price Pool-Mississippi.Stage.Inst.15Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_11": {
+            "location_id": "Mel Price TW-Mississippi",
+            "tsid": "Mel Price TW-Mississippi.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_12": {
+            "location_id": "Pump Sta 1-Wood River E Alton",
+            "tsid": "Pump Sta 1-Wood River E Alton.Elev.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_13": {
+            "location_id": "LD 27 Pool-Mississippi",
+            "tsid": "LD 27 Pool-Mississippi.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_14": {
+            "location_id": "LD 27 TW-Mississippi",
+            "tsid": "LD 27 TW-Mississippi.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_15": {
+            "location_id": "St Louis-Mississippi",
+            "tsid": "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_16": {
+            "location_id": "Engineers Depot-Mississippi",
+            "tsid": "Engineers Depot-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_17": {
+            "location_id": "Jefferson Brks-Mississippi",
+            "tsid": "Jefferson Brks-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_18": {
+            "location_id": "Herculaneum-Mississippi",
+            "tsid": "Herculaneum-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_19": {
+            "location_id": "Chester-Mississippi",
+            "tsid": "Chester-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_20": {
+            "location_id": "Red Rock Ldg-Mississippi",
+            "tsid": "Red Rock Ldg-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_21": {
+            "location_id": "Grand Tower-Mississippi",
+            "tsid": "Grand Tower-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_22": {
+            "location_id": "Moccasin Springs-Mississippi",
+            "tsid": "Moccasin Springs-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_23": {
+            "location_id": "Cape Girardeau-Mississippi",
+            "tsid": "Cape Girardeau-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_24": {
+            "location_id": "Grays Pt-Mississippi",
+            "tsid": "Grays Pt-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_25": {
+            "location_id": "Thebes-Mississippi",
+            "tsid": "Thebes-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_26": {
+            "location_id": "Commerce-Mississippi",
+            "tsid": "Commerce-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_27": {
+            "location_id": "Price Ldg-Mississippi",
+            "tsid": "Price Ldg-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_28": {
+            "location_id": "Thompson Ldg-Mississippi",
+            "tsid": "Thompson Ldg-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_29": {
+            "location_id": "Birds Point-Mississippi",
+            "tsid": "Birds Point-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        }
+    }
+]

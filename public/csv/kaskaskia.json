@@ -1,0 +1,167 @@
+[
+    {
+        "project_id": "Kaskaskia",
+        "cwms_01": {
+            "location_id": "Chesterville-Kaskaskia",
+            "tsid": "Chesterville-Kaskaskia.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_02": {
+            "location_id": "Cooks Mill-Kaskaskia",
+            "tsid": "Cooks Mill-Kaskaskia.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_03": {
+            "location_id": "Allenville-Whitley Cr",
+            "tsid": "Allenville-Whitley Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_04": {
+            "location_id": "Lovington-W Okaw",
+            "tsid": "Lovington-W Okaw.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_05": {
+            "location_id": "Lk Shelbyville-Kaskaskia",
+            "tsid": "Lk Shelbyville-Kaskaskia.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_06": {
+            "location_id": "Shelbyville TW-Kaskaskia",
+            "tsid": "Shelbyville TW-Kaskaskia.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_07": {
+            "location_id": "Shelbyville-Robinson Cr",
+            "tsid": "Shelbyville-Robinson Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_08": {
+            "location_id": "Cowden-Kaskaskia",
+            "tsid": "Cowden-Kaskaskia.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_09": {
+            "location_id": "Ramsey-Kaskaskia",
+            "tsid": "Ramsey-Kaskaskia.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_10": {
+            "location_id": "Vandalia-Kaskaskia",
+            "tsid": "Vandalia-Kaskaskia.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_11": {
+            "location_id": "Brownstown-Hickory Cr",
+            "tsid": "Brownstown-Hickory Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_12": {
+            "location_id": "Mulberry Grove-Hurricane Cr",
+            "tsid": "Mulberry Grove-Hurricane Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_13": {
+            "location_id": "Fairman-E Fork",
+            "tsid": "Fairman-E Fork.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_14": {
+            "location_id": "Carlyle Lk-Kaskaskia",
+            "tsid": "Carlyle Lk-Kaskaskia.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_15": {
+            "location_id": "Carlyle Lk TW-Kaskaskia",
+            "tsid": "Carlyle Lk TW-Kaskaskia.Stage.Inst.15Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_16": {
+            "location_id": "Carlyle-Kaskaskia",
+            "tsid": "Carlyle-Kaskaskia.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_17": {
+            "location_id": "Posey-Kaskaskia",
+            "tsid": "Posey-Kaskaskia.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_18": {
+            "location_id": "Hoffman-Crooked Cr",
+            "tsid": "Hoffman-Crooked Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_19": {
+            "location_id": "Pierron-Shoal Cr",
+            "tsid": "Pierron-Shoal Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_20": {
+            "location_id": "Breese-Shoal Cr",
+            "tsid": "Breese-Shoal Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_21": {
+            "location_id": "Venedy Station-Kaskaskia",
+            "tsid": "Venedy Station-Kaskaskia.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_22": {
+            "location_id": "Fayetteville-Kaskaskia",
+            "tsid": "Fayetteville-Kaskaskia.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_23": {
+            "location_id": "Freeburg-Silver Cr",
+            "tsid": "Freeburg-Silver Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_24": {
+            "location_id": "Hecker-Richland Cr",
+            "tsid": "Hecker-Richland Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_25": {
+            "location_id": "Red Bud-Kaskaskia",
+            "tsid": "Red Bud-Kaskaskia.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_26": {
+            "location_id": "Nav Pool-Kaskaskia",
+            "tsid": "Nav Pool-Kaskaskia.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_27": {
+            "location_id": "Nav TW-Kaskaskia",
+            "tsid": "Nav TW-Kaskaskia.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        }
+    }
+]

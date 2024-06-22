@@ -1,0 +1,95 @@
+[
+    {
+        "project_id": "Salt",
+        "cwms_01": {
+            "location_id": "Perry-Lick Cr",
+            "tsid": "Perry-Lick Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_02": {
+            "location_id": "Santa Fe-S Fork Salt",
+            "tsid": "Santa Fe-S Fork Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_03": {
+            "location_id": "Santa Fe-Long Branch",
+            "tsid": "Santa Fe-Long Branch.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_04": {
+            "location_id": "Madison-Elk Fork Salt",
+            "tsid": "Madison-Elk Fork Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_05": {
+            "location_id": "Holliday-Mid Fork Salt",
+            "tsid": "Holliday-Mid Fork Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_06": {
+            "location_id": "Paris-Crooked Cr",
+            "tsid": "Paris-Crooked Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_07": {
+            "location_id": "Hagers Grove-N Fork Salt",
+            "tsid": "Hagers Grove-N Fork Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_08": {
+            "location_id": "Shelbina-N Fork Salt",
+            "tsid": "Shelbina-N Fork Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_09": {
+            "location_id": "Mark Twain Lk-Salt",
+            "tsid": "Mark Twain Lk-Salt.Stage.Inst.30Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_10": {
+            "location_id": "Mark Twain Lk TW-Salt",
+            "tsid": "Mark Twain Lk TW-Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_11": {
+            "location_id": "ReReg Pool-Salt",
+            "tsid": "ReReg Pool-Salt.Stage.Inst.15Minutes.0.29",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_12": {
+            "location_id": "Norton Bridge-Salt",
+            "tsid": "Norton Bridge-Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_13": {
+            "location_id": "New London-Salt",
+            "tsid": "New London-Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_14": {
+            "location_id": "Frankford-Spencer Cr",
+            "tsid": "Frankford-Spencer Cr.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_15": {
+            "location_id": "Ashburn-Salt",
+            "tsid": "Ashburn-Salt.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        }
+    }
+]

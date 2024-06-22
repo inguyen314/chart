@@ -1,0 +1,17 @@
+[
+    {
+        "project_id": "Missouri",
+        "cwms_01": {
+            "location_id": "Hermann-Missouri",
+            "tsid": "Hermann-Missouri.Stage.Inst.15Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_02": {
+            "location_id": "St Charles-Missouri",
+            "tsid": "St Charles-Missouri.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        }
+    }
+]

@@ -1,0 +1,27 @@
+[
+    {
+        "tsid": "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+        "location_id": "St Louis-Mississippi",
+        "start_day": "4",
+        "end_day": "0"
+
+    },
+    {
+        "tsid": "Chester-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+        "location_id": "Chester-Mississippi",
+        "start_day": "4",
+        "end_day": "0"
+    },
+    {
+        "tsid": "Grafton-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+        "location_id": "Grafton-Mississippi",
+        "start_day": "4",
+        "end_day": "0"
+    },
+    {
+        "tsid": "Thebes-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+        "location_id": "Thebes-Mississippi",
+        "start_day": "4",
+        "end_day": "0"
+    }
+]

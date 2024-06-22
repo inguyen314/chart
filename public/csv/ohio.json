@@ -1,0 +1,11 @@
+[
+    {
+        "project_id": "Ohio",
+        "cwms_01": {
+            "location_id": "Cairo-Ohio",
+            "tsid": "Cairo-Ohio.Stage.Inst.1Hour.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        }
+    }
+]

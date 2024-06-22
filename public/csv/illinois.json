@@ -1,0 +1,29 @@
+[
+    {
+        "project_id": "Illinois",
+        "cwms_01": {
+            "location_id": "Meredosia-Illinois",
+            "tsid": "Meredosia-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_02": {
+            "location_id": "Valley City-Illinois",
+            "tsid": "Valley City-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_03": {
+            "location_id": "Florence-Illinois",
+            "tsid": "Florence-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        },
+        "cwms_04": {
+            "location_id": "Hardin-Illinois",
+            "tsid": "Hardin-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev",
+            "start_day": "4",
+            "end_day": "0"
+        }
+    }
+]
