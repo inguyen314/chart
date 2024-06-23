@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 processDataAndDisplay(nonEmptyDatasets);
 
                 // No metadata
-                document.getElementById("location-data").innerText = "Data available for single stage time series.";
+                document.getElementById("gage_control_04").innerText = "Data available for single stage time series.";
 
                 loadingIndicator.style.display = 'none';
             
@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function () {
             processDataAndDisplay(nonEmptyDatasets);
 
             // No metadata
-            document.getElementById("location-data").innerText = "Data available for single stage time series.";
+            document.getElementById("gage_control_04").innerText = "Data available for single stage time series.";
 
             loadingIndicator.style.display = 'none';
         } else if (nonEmptyDatasets.length > 1 & (parameterId !== parameterId2)) {
@@ -1058,7 +1058,7 @@ function displayLocationData(data, data2, versionId) {
         elevation = (data["elevation"]).toFixed(2);
     }
 
-    const locationDataDiv = document.getElementById("location-data");
+    const locationDataDiv = document.getElementById("gage_control_04");
     locationDataDiv.innerHTML += `Vertical Datum: ${verticalDatum}<br>Gage Zero: ${elevation} ft` + `<br>`;
 }
 
@@ -1080,7 +1080,7 @@ function displayNgvd29Data(data, data2, versionId) {
         }
     }
 
-    const locationDataDiv = document.getElementById("location-data");
+    const locationDataDiv = document.getElementById("gage_control_04");
     locationDataDiv.innerHTML += `Vertical Datum: ${verticalDatum}<br>Gage Zero: ${elevation} ft`;
 }
 
@@ -1129,7 +1129,7 @@ function findValueAt6Am(datasets, targetTimeString) {
 function processDataAndDisplay(datasets) {
     // Check if there are multiple datasets
     if (datasets.length > 1) {
-        document.getElementById('data_6am').innerHTML = "data not available for multiple time series";
+        document.getElementById('gage_control_03').innerHTML = "data not available for multiple time series";
         return;
     }
     // Get today's date
@@ -1147,8 +1147,8 @@ function processDataAndDisplay(datasets) {
     const valueToday = findValueAt6Am(datasets, targetTimeStringToday);
     const valueYesterday = findValueAt6Am(datasets, targetTimeStringYesterday);
 
-    // Display the results in the <div> with id "data_6am"
-    document.getElementById('data_6am').innerHTML = `
+    // Display the results in the <div> with id "gage_control_03"
+    document.getElementById('gage_control_03').innerHTML = `
         ${valueToday}<br>
         ${valueYesterday}
     `;
