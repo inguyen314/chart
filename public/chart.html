@@ -43,6 +43,36 @@
                                 <div class="box-content" style="background-color:white;margin:auto">
                                     <div class="content">
                                         <!-- Box Content Here -->
+                                        <script>
+                                            // Extract URL parameters
+                                            const urlParams = new URLSearchParams(window.location.search);
+                                            // Get the value of a specific parameter
+                                            const param1Value = urlParams.get('cda');
+                                            const param2Value = urlParams.get('cwms_ts_id');
+                                            const param3Value = urlParams.get('cwms_ts_id_2');
+                                            const param4Value = urlParams.get('cwms_ts_id_3');
+                                            const param5Value = urlParams.get('cwms_ts_id_4');
+                                            const param6Value = urlParams.get('cwms_ts_id_5');
+                                            const param7Value = urlParams.get('cwms_ts_id_6');
+                                            const param8Value = urlParams.get('cwms_ts_id_6');
+                                            const param9Value = urlParams.get('lookback');
+                                            const param10Value = urlParams.get('basin');
+                
+                                            urlParams.forEach(function(value, key) {
+                                                console.log(key, value);
+                                            });
+                
+                                            var basin = urlParams.get('basin');
+                                            var cda = urlParams.get('cda');
+                                            var lookback = urlParams.get('lookback');
+                                            var cwms_ts_id = urlParams.get('cwms_ts_id');
+                                            var cwms_ts_id_2 = urlParams.get('cwms_ts_id_2');
+                                            var cwms_ts_id_3 = urlParams.get('cwms_ts_id_3');
+                                            var cwms_ts_id_4 = urlParams.get('cwms_ts_id_4');
+                                            var cwms_ts_id_5 = urlParams.get('cwms_ts_id_5');
+                                            var cwms_ts_id_6 = urlParams.get('cwms_ts_id_6');
+                                            var cwms_ts_id_7 = urlParams.get('cwms_ts_id_7');
+                                        </script>
                                         <!-- loading spinner -->
                                         <div id="loading" style="display: none;"><img src="../../images/loading4.gif" style='height: 50px; width: 50px;' alt="Loading..." /></div>
 
@@ -58,9 +88,9 @@
                                         assumes no liability for the completeness or accuracy of the data contained herein and any use of such data inconsistent with this 
                                         disclaimer shall be solely at the risk of the user.</div>
                                         <!-- control lookback date and metadata -->
-                                        <div class="container">
+                                        <div class="gage_control_container">
                                             <!-- date input -->
-                                            <div id="date_control">
+                                            <div id="gage_control_01">
                                                 <form id="numberForm">
                                                     <label for="numberInput">Lookback Hours:</label>
                                                     <input type="number" id="numberInput" name="numberInput" required>
@@ -75,19 +105,20 @@
                                                 </script>
                                             </div>
                                             <!-- basin input -->
-                                            <div id="basin_control">
-                                                <label for="basinDropdown">Select Basin:</label>
-                                                <select id="basinDropdown"></select>
-                                                <button id="submitButton">Submit</button>
+                                            <div id="gage_control_02">
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', () => {
+                                                        console.log("basin inside gage_control_02", basin);
+                                                        initializeBasinDropdown(basin);
+                                                    });
+                                                </script>
                                             </div>
 
-                                            <!-- basin2 input -->
-                                            <div id="data_6am">
-                                                
-                                            </div>
+                                            <!-- data 6am level -->
+                                            <div id="gage_control_03"></div>
                                             
                                             <!-- Location Data -->
-                                            <div id="location-data"></div>
+                                            <div id="gage_control_04"></div>
                                         </div>
                                         <!-- data table -->
                                         <div id="data-table" style="width: 25%;"></div>
@@ -98,35 +129,6 @@
                         </div>
                         <!-- url parameters and handle submit change lookback hours -->
                         <script>
-                            // Extract URL parameters
-                            const urlParams = new URLSearchParams(window.location.search);
-                            // Get the value of a specific parameter
-                            const param1Value = urlParams.get('cda');
-                            const param2Value = urlParams.get('cwms_ts_id');
-                            const param3Value = urlParams.get('cwms_ts_id_2');
-                            const param4Value = urlParams.get('cwms_ts_id_3');
-                            const param5Value = urlParams.get('cwms_ts_id_4');
-                            const param6Value = urlParams.get('cwms_ts_id_5');
-                            const param7Value = urlParams.get('cwms_ts_id_6');
-                            const param8Value = urlParams.get('cwms_ts_id_6');
-                            const param9Value = urlParams.get('lookback');
-                            const param10Value = urlParams.get('basin');
-
-                            urlParams.forEach(function(value, key) {
-                                console.log(key, value);
-                            });
-
-                            var basin = urlParams.get('basin');
-                            var cda = urlParams.get('cda');
-                            var lookback = urlParams.get('lookback');
-                            var cwms_ts_id = urlParams.get('cwms_ts_id');
-                            var cwms_ts_id_2 = urlParams.get('cwms_ts_id_2');
-                            var cwms_ts_id_3 = urlParams.get('cwms_ts_id_3');
-                            var cwms_ts_id_4 = urlParams.get('cwms_ts_id_4');
-                            var cwms_ts_id_5 = urlParams.get('cwms_ts_id_5');
-                            var cwms_ts_id_6 = urlParams.get('cwms_ts_id_6');
-                            var cwms_ts_id_7 = urlParams.get('cwms_ts_id_7');
-        
                             // Pre-populate the number input field with the value of 'lookback'
                             document.getElementById('numberInput').value = lookback;
 
@@ -139,86 +141,9 @@
                                 window.location.href = currentUrl.toString();
                             });
 
-                            const basins = [
-                                "Mississippi",
-                                "Illinois",
-                                "Missouri",
-                                "Meramec",
-                                "Tributaries",
-                                "Mark Twain DO",
-                                "Mark Twain",
-                                "Wappapello",
-                                "Shelbyville",
-                                "Carlyle",
-                                "Rend",
-                                "Kaskaskia Nav",
-                                "Water Quality"
-                            ];
-
-                            // Log the fetched data
-                            console.log('basins: ', basins);
-
-                            const dropdown = document.getElementById('basinDropdown');
-                            const basinInput = document.getElementById('basinInput');
-                            const submitButton = document.getElementById('submitButton'); // Assuming submitButton ID is defined in your HTML
-
-                            // Function to get query parameter value by name
-                            function getQueryParameter(name) {
-                                const urlParams = new URLSearchParams(window.location.search);
-                                return urlParams.get(name);
-                            }
-
-                            // Populate dropdown with basin data
-                            basins.forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item;
-                                option.text = item;
-                                dropdown.add(option);
-                            });
-
-                            // Set the dropdown to the selected basin if it exists in the URL
-                            const selectedBasin = getQueryParameter('basin');
-                            if (selectedBasin) {
-                                dropdown.value = selectedBasin;
-                            }
-
-                            // Add event listener to the submit button
-                            submitButton.addEventListener('click', () => {
-                                const selectedBasin = dropdown.value;
-
-                                let selectedTsis = null;
-                                if (selectedBasin=="Mississippi") {
-                                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
-                                } else if (selectedBasin=="Illinois") {
-                                    selectedTsis = "Meredosia-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev";
-                                } else if (selectedBasin=="Missouri") {
-                                    selectedTsis = "St Charles-Missouri.Stage.Inst.30Minutes.0.lrgsShef-rev";
-                                } else if (selectedBasin=="Meramec") {
-                                    selectedTsis = "Eureka-Meramec.Flow.Inst.30Minutes.0.RatingUSGS";
-                                } else if (selectedBasin=="Tributaries") {
-                                    selectedTsis = "Troy-Cuivre.Flow.Inst.15Minutes.0.RatingUSGS";
-                                } else if (selectedBasin=="Mark Twain DO") {
-                                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
-                                } else if (selectedBasin=="Mark Twain") {
-                                    selectedTsis = "Mark Twain Lk-Salt.Stage.Inst.30Minutes.0.29";
-                                } else if (selectedBasin=="Wappapello") {
-                                    selectedTsis = "Wappapello Lk-St Francis.Stage.Inst.30Minutes.0.29";
-                                } else if (selectedBasin=="Shelbyville") {
-                                    selectedTsis = "Lk Shelbyville-Kaskaskia.Stage.Inst.30Minutes.0.29";
-                                } else if (selectedBasin=="Carlyle") {
-                                    selectedTsis = "Carlyle Lk-Kaskaskia.Stage.Inst.30Minutes.0.29";
-                                } else if (selectedBasin=="Rend") {
-                                    selectedTsis = "Rend Lk-Big Muddy.Stage.Inst.30Minutes.0.29";
-                                } else if (selectedBasin=="Kaskaskia Nav") {
-                                    selectedTsis = "Venedy Station-Kaskaskia.Flow.Inst.15Minutes.0.RatingUSGS";
-                                } else if (selectedBasin=="Water Quality") {
-                                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
-                                } else {
-                                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
-                                }
-                                const newUrl = `https://wm.mvs.ds.usace.army.mil/District-Templates/chart/public/chart-macro.html?basin=${selectedBasin}&cwms_ts_id=${selectedTsis}&lookback=96`; // `https://example.com/${selectedBasin}`; // Change this URL as needed
-                                window.location.href = newUrl;
-                            }); 
+                            // Basin Control
+                            
+                            
                         </script>
                     </div>
                 </div>
@@ -268,3 +193,117 @@
         </script>
     </body>
 </html>
+<script>
+function initializeBasinDropdown(basin) {
+    if (basin !== null) {
+        const basins = [
+            "Mississippi",
+            "Illinois",
+            "Missouri",
+            "Meramec",
+            "Tributaries",
+            "Mark Twain DO",
+            "Mark Twain",
+            "Wappapello",
+            "Shelbyville",
+            "Carlyle",
+            "Rend",
+            "Kaskaskia Nav",
+            "Water Quality"
+        ];
+
+        console.log('basins: ', basins);
+
+        const container = document.getElementById('gage_control_02');
+        if (!container) {
+            console.error('Container with id "gage_control_02" not found');
+            return;
+        }
+
+        // Create and append label
+        const label = document.createElement('label');
+        label.textContent = 'Select a Basin';
+        container.appendChild(label);
+
+        // Create and append dropdown
+        const dropdown = document.createElement('select');
+        dropdown.id = 'basinDropdown';
+        container.appendChild(dropdown);
+
+        // Create and append submit button
+        const submitButton = document.createElement('button');
+        submitButton.id = 'submitButton';
+        submitButton.textContent = 'Submit';
+        container.appendChild(submitButton);
+
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        basins.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item;
+            option.text = item;
+            dropdown.add(option);
+        });
+
+        const selectedBasin = getQueryParameter('basin') || basin;
+        if (selectedBasin) {
+            dropdown.value = selectedBasin;
+        }
+
+        submitButton.addEventListener('click', () => {
+            const selectedBasin = dropdown.value;
+
+            let selectedTsis = null;
+            switch (selectedBasin) {
+                case "Mississippi":
+                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
+                    break;
+                case "Illinois":
+                    selectedTsis = "Meredosia-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev";
+                    break;
+                case "Missouri":
+                    selectedTsis = "St Charles-Missouri.Stage.Inst.30Minutes.0.lrgsShef-rev";
+                    break;
+                case "Meramec":
+                    selectedTsis = "Eureka-Meramec.Flow.Inst.30Minutes.0.RatingUSGS";
+                    break;
+                case "Tributaries":
+                    selectedTsis = "Troy-Cuivre.Flow.Inst.15Minutes.0.RatingUSGS";
+                    break;
+                case "Mark Twain DO":
+                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
+                    break;
+                case "Mark Twain":
+                    selectedTsis = "Mark Twain Lk-Salt.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Wappapello":
+                    selectedTsis = "Wappapello Lk-St Francis.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Shelbyville":
+                    selectedTsis = "Lk Shelbyville-Kaskaskia.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Carlyle":
+                    selectedTsis = "Carlyle Lk-Kaskaskia.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Rend":
+                    selectedTsis = "Rend Lk-Big Muddy.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Kaskaskia Nav":
+                    selectedTsis = "Venedy Station-Kaskaskia.Flow.Inst.15Minutes.0.RatingUSGS";
+                    break;
+                case "Water Quality":
+                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
+                    break;
+                default:
+                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
+            }
+
+            const newUrl = `https://wm.mvs.ds.usace.army.mil/District-Templates/chart/public/chart.html?basin=${selectedBasin}&cwms_ts_id=${selectedTsis}&lookback=96`;
+            window.location.href = newUrl;
+        });
+    }
+}
+</script>

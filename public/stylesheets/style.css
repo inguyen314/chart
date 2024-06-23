@@ -75,7 +75,7 @@ form {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-label, input {
+label, input, select {
     display: block;
     width: 100%;
     margin-bottom: 10px;
@@ -87,11 +87,11 @@ label, input {
     background-color: #ffcccc; /* Light red background */
     color: red; /* Red text color */
 }
-.container {
+.gage_control_container {
     width: 100%; 
     overflow: hidden; 
 }
-#date_control, #location-data, #basin_control, #data_6am {
+#gage_control_01, #gage_control_02, #gage_control_03, #gage_control_04 {
     width: 24%;
     padding: 10px; 
     border: 1px solid #666666;  
