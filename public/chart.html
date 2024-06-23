@@ -301,7 +301,7 @@ function initializeBasinDropdown(basin) {
                     selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
             }
 
-            const newUrl = `https://wm.mvs.ds.usace.army.mil/District-Templates/chart/public/chart.html?basin=${selectedBasin}&cwms_ts_id=${selectedTsis}&lookback=96`;
+            const newUrl = `https://wm.mvs.ds.usace.army.mil/district_templates/chart/public/chart.html?basin=${selectedBasin}&cwms_ts_id=${selectedTsis}&lookback=96`;
             window.location.href = newUrl;
         });
     }
