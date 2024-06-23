@@ -72,7 +72,7 @@ $end_day = $_GET['end_day'] ?? null;
                             <div id="loading" style="display: none;"><img src="../../images/loading4.gif" style='height: 50px; width: 50px;' alt="Loading..." /></div>
                             <div><canvas id="myChart" width="800" height="400"></canvas></div>
                             <div id="table"></div>
-                            <script src="chart3.js"></script>
+                            <script src="chart.js"></script>
                         </div>
                     </div>
                 </div>
