@@ -433,23 +433,29 @@ document.addEventListener('DOMContentLoaded', function () {
             ];
 
             const series = nonEmptyDatasets.map((data, index) => {
-                const cwmsTsId = data.name;
-                const parameterId = data.name.split('.')[1];
-                const unitId = data.units;
-        
+                // Extracting dataset details
+                const cwmsTsId = data.name; // The name of the dataset
+                const parameterId = data.name.split('.')[1]; // The parameter ID from the dataset name
+                const unitId = data.units; // The unit ID
+            
+                // Formatting the data points
+                const formattedData = data.values.map(item => ({ x: item[0], y: item[1] }));
+            
+                // Returning the series object
                 return {
                     label: cwmsTsId,
                     parameter_id: parameterId,
                     unit_id: unitId,
-                    data: data.values.map(item => ({ x: item[0], y: item[1] })),
-                    borderColor: colors[index % colors.length],
-                    backgroundColor: colors[index % colors.length],
-                    fill: false,
-                    yAxisID: parameterId // Assign the y-axis ID based on parameterId
+                    data: formattedData,
+                    borderColor: colors[index % colors.length], // Cycling through colors
+                    backgroundColor: colors[index % colors.length], // Cycling through colors
+                    fill: false, // Not filling the area under the line
+                    yAxisID: parameterId // Linking to the Y-axis
                 };
             });
+            
 
-            // console.log(series);
+            console.log("series: ", series);
 
             // Plot Data
             plotData(series);
@@ -458,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function () {
             processDataAndDisplay(nonEmptyDatasets);
 
             loadingIndicator.style.display = 'none';
-        }else {
+        } else {
             console.log('No valid datasets to display.');
             loadingIndicator.style.display = 'none';
         }
@@ -473,9 +479,6 @@ document.addEventListener('DOMContentLoaded', function () {
 function plotData(datasets) {
     console.log('datasets @ plotData: ', datasets);
 
-    // Calculate initial minY and maxY from visible datasets
-    // const { minY, maxY } = getInitialMinMaxY(datasets);
-
     // Extract unique parameter IDs for creating multiple y-axes, excluding null and undefined
     const uniqueParameterIds = [...new Set(datasets.map(item => item.parameter_id).filter(id => id != null))];
     console.log('uniqueParameterIds:', uniqueParameterIds);
@@ -489,10 +492,13 @@ function plotData(datasets) {
         minY = initialMinMax.minY;
         maxY = initialMinMax.maxY;
     } else {
-        const initialMinMaxDual = getInitialMinMaxYDualAxis(datasets, uniqueParameterIds);
+        const initialMinMaxDual = getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds);
         minY = initialMinMaxDual.minY;
         maxY = initialMinMaxDual.maxY;
     }
+
+    console.log('minY:', minY);
+    console.log('maxY:', maxY);
     
     // Create y-axes configuration dynamically if there are unique parameter IDs
     let yScales = {};
@@ -645,7 +651,7 @@ function plotData(datasets) {
                             const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
                             
                             // Recalculate min and max Y values for visible datasets
-                            const { minY, maxY } = getInitialMinMaxYDualAxis(visibleDatasets, uniqueParameterIds);
+                            const { minY, maxY } = getInitialMinMaxYDualAxis2(visibleDatasets, uniqueParameterIds);
                     
                             // Update y-axes min and max
                             Object.keys(chart.options.scales).forEach(scale => {
@@ -684,7 +690,7 @@ function plotData(datasets) {
                         const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
                 
                         // Recalculate min and max Y values for visible datasets
-                        const { minY, maxY } = getInitialMinMaxYDualAxis(visibleDatasets, uniqueParameterIds);
+                        const { minY, maxY } = getInitialMinMaxYDualAxis2(visibleDatasets, uniqueParameterIds);
                 
                         // Update y-axes min and max for each scale
                         Object.keys(chart.options.scales).forEach(scaleKey => {
@@ -1152,4 +1158,40 @@ function processDataAndDisplay(datasets) {
         ${valueToday}<br>
         ${valueYesterday}
     `;
+}
+
+// Function to get minY and maxY for dual axis chart version 2
+function getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds) {
+    let minY = { y0: Infinity, y1: Infinity };
+    let maxY = { y0: -Infinity, y1: -Infinity };
+
+    datasets.forEach((dataset, datasetIndex) => {
+        dataset.data.forEach((point, pointIndex) => {
+            const yAxisID = dataset.yAxisID;
+            if (yAxisID === uniqueParameterIds[0]) {
+                if (point.y < minY.y0) {
+                    minY.y0 = point.y;
+                    console.log(`Updated minY.y0 at dataset ${datasetIndex}, point ${pointIndex}: ${minY.y0}`);
+                }
+                if (point.y > maxY.y0) {
+                    maxY.y0 = point.y;
+                    console.log(`Updated maxY.y0 at dataset ${datasetIndex}, point ${pointIndex}: ${maxY.y0}`);
+                }
+            } else if (yAxisID === uniqueParameterIds[1]) {
+                if (point.y < minY.y1) {
+                    minY.y1 = point.y;
+                    console.log(`Updated minY.y1 at dataset ${datasetIndex}, point ${pointIndex}: ${minY.y1}`);
+                }
+                if (point.y > maxY.y1) {
+                    maxY.y1 = point.y;
+                    console.log(`Updated maxY.y1 at dataset ${datasetIndex}, point ${pointIndex}: ${maxY.y1}`);
+                }
+            }
+        });
+    });
+
+    console.log('Final minY:', minY);
+    console.log('Final maxY:', maxY);
+
+    return { minY, maxY };
 }
