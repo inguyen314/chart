@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentDateTimeMinusLookBack = subtractHoursFromDate(currentDateTime, lookback);
     console.log("currentDateTimeMinusLookBack = ", currentDateTimeMinusLookBack);
 
+    let cdaUrl = null;
     if (cda === "public") {
         cdaUrl = "https://cwms-data.usace.army.mil/cwms-data";
     } else if (cda === "internal") {
