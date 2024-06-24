@@ -462,7 +462,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
             });
             
-
             console.log("series: ", series);
 
             // Plot Data
