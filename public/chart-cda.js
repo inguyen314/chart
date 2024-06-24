@@ -493,9 +493,18 @@ function plotData(datasets) {
 
     // Create a mapping for unique parameter IDs to 'y0' and 'y1'
     const parameterIdToYAxis = {};
-    uniqueParameterIds.forEach((id, index) => {
-        parameterIdToYAxis[id] = index % 2 === 0 ? 'y0' : 'y1';
-    });
+
+    if (uniqueParameterIds.length === 1) {
+        // If there's only one parameterId, map it to both 'y0' and 'y1'
+        const parameterId = uniqueParameterIds[0];
+        parameterIdToYAxis[parameterId] = 'y';
+        // parameterIdToYAxis[parameterId] = 'y1'; // or choose 'y1', depending on your logic
+    } else {
+        // If there are two parameterIds, map them alternately to 'y0' and 'y1'
+        uniqueParameterIds.forEach((id, index) => {
+            parameterIdToYAxis[id] = index % 2 === 0 ? 'y0' : 'y1';
+        });
+    }
 
     // Log the entire mapping object
     console.log('parameterIdToYAxis:', parameterIdToYAxis);
@@ -506,22 +515,21 @@ function plotData(datasets) {
     });
 
     // Calculate initial minY and maxY from visible datasets
-    let minY = null;
-    let maxY = null;
+    let minY, maxY;
 
     if (uniqueParameterIds.length === 1) {
-        const initialMinMax = getInitialMinMaxY(datasets);
+        const initialMinMax = getInitialMinMaxY(datasets); // Implement getInitialMinMaxY function if not already defined
         minY = initialMinMax.minY;
         maxY = initialMinMax.maxY;
     } else {
-        const initialMinMaxDual = getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds);
+        const initialMinMaxDual = getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds); // Implement getInitialMinMaxYDualAxis2 function if not already defined
         minY = initialMinMaxDual.minY;
         maxY = initialMinMaxDual.maxY;
     }
 
     console.log('minY:', minY);
     console.log('maxY:', maxY);
-    
+
     // Create y-axes configuration dynamically if there are unique parameter IDs
     let yScales = {};
 
@@ -535,7 +543,7 @@ function plotData(datasets) {
                 position: 'left',
                 title: {
                     display: true,
-                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').parameter_id + ' ' + '(' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').unit_id + ')'
+                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').parameter_id + ' (' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').unit_id + ')'
                 }
             },
             y1: {
@@ -545,7 +553,7 @@ function plotData(datasets) {
                 position: 'right',
                 title: {
                     display: true,
-                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').parameter_id + ' ' + '(' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').unit_id + ')',
+                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').parameter_id + ' (' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').unit_id + ')'
                 }
             }
         };
@@ -559,14 +567,15 @@ function plotData(datasets) {
                 position: 'left',
                 title: {
                     display: true,
-                    text: datasets[0].parameter_id + ' ' + '(' + datasets[0].unit_id + ')',
+                    text: datasets[0].parameter_id + ' (' + datasets[0].unit_id + ')',
                     font: {
                         size: 14 // Set the font size for the y-axis title
                     }
-                },
+                }
             }
         };
     }
+
 
     const ctx = document.getElementById('myChart').getContext('2d');
     const chart = new Chart(ctx, {
