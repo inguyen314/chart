@@ -27,10 +27,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentDateTimeMinusLookBack = subtractHoursFromDate(currentDateTime, lookback);
     console.log("currentDateTimeMinusLookBack = ", currentDateTimeMinusLookBack);
 
+    if (cda === "public") {
+        cdaUrl = "https://cwms-data.usace.army.mil/cwms-data";
+    } else if (cda === "internal") {
+        cdaUrl = "https://coe-mvsuwa04mvs.mvs.usace.army.mil:8243/mvs-data";
+    } else {
+        cdaUrl = null;
+    }
+
     // Map each dataset to its corresponding URL
     const timeseriesUrl = validTsids.map(data => {
         const queryString = data.cwms_ts_id; // Assuming this is correct
-        return `https://cwms-data.usace.army.mil/cwms-data/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTime.toISOString()}&office=MVS`;
+        return `${cdaUrl}/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTime.toISOString()}&office=MVS`;
     });
     console.log("timeseriesUrl = ", timeseriesUrl);
 
