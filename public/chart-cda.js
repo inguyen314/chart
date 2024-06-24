@@ -491,7 +491,21 @@ function plotData(datasets) {
     const uniqueParameterIds = [...new Set(datasets.map(item => item.parameter_id).filter(id => id != null))];
     console.log('uniqueParameterIds:', uniqueParameterIds);
 
-   // Calculate initial minY and maxY from visible datasets
+    // Create a mapping for unique parameter IDs to 'y0' and 'y1'
+    const parameterIdToYAxis = {};
+    uniqueParameterIds.forEach((id, index) => {
+        parameterIdToYAxis[id] = index % 2 === 0 ? 'y0' : 'y1';
+    });
+
+    // Log the entire mapping object
+    console.log('parameterIdToYAxis:', parameterIdToYAxis);
+
+    // Apply the mapping to the datasets
+    datasets.forEach(dataset => {
+        dataset.yAxisID = parameterIdToYAxis[dataset.parameter_id];
+    });
+
+    // Calculate initial minY and maxY from visible datasets
     let minY = null;
     let maxY = null;
 
@@ -521,7 +535,7 @@ function plotData(datasets) {
                 position: 'left',
                 title: {
                     display: true,
-                    text: datasets[0].parameter_id + ' ' + '(' + datasets[0].unit_id + ')'
+                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').parameter_id + ' ' + '(' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').unit_id + ')'
                 }
             },
             y1: {
@@ -531,7 +545,7 @@ function plotData(datasets) {
                 position: 'right',
                 title: {
                     display: true,
-                    text: datasets[1].parameter_id + ' ' + '(' + datasets[1].unit_id + ')',
+                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').parameter_id + ' ' + '(' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').unit_id + ')',
                 }
             }
         };
@@ -550,7 +564,6 @@ function plotData(datasets) {
                         size: 14 // Set the font size for the y-axis title
                     }
                 },
-
             }
         };
     }
@@ -729,6 +742,7 @@ function plotData(datasets) {
         }
     });
 }
+
 
 // Function to check Daylight Saving Time
 function isDaylightSavingTime(date) {
@@ -1174,7 +1188,17 @@ function getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds) {
     let maxY = { y0: -Infinity, y1: -Infinity };
 
     datasets.forEach((dataset, datasetIndex) => {
+        if (!dataset.data || !Array.isArray(dataset.data)) {
+            console.log(`Dataset ${datasetIndex} has no valid data array.`);
+            return;
+        }
+
         dataset.data.forEach((point, pointIndex) => {
+            if (typeof point.y !== 'number') {
+                console.log(`Point ${pointIndex} in dataset ${datasetIndex} has an invalid y value: ${point.y}`);
+                return;
+            }
+
             const yAxisID = dataset.yAxisID;
             if (yAxisID === uniqueParameterIds[0]) {
                 if (point.y < minY.y0) {
@@ -1194,9 +1218,17 @@ function getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds) {
                     maxY.y1 = point.y;
                     console.log(`Updated maxY.y1 at dataset ${datasetIndex}, point ${pointIndex}: ${maxY.y1}`);
                 }
+            } else {
+                console.log(`Dataset ${datasetIndex}, point ${pointIndex} has an invalid yAxisID: ${yAxisID}`);
             }
         });
     });
+
+    // Set to null if no valid values were found
+    if (minY.y0 === Infinity) minY.y0 = null;
+    if (minY.y1 === Infinity) minY.y1 = null;
+    if (maxY.y0 === -Infinity) maxY.y0 = null;
+    if (maxY.y1 === -Infinity) maxY.y1 = null;
 
     console.log('Final minY:', minY);
     console.log('Final maxY:', maxY);
