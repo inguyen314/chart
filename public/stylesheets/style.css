@@ -81,6 +81,12 @@ label, input, select {
     margin-bottom: 10px;
 }
 /*** ===================================================================================== ***/
+/*** FORM ***/
+/*** ===================================================================================== ***/
+#data_table {
+    width: 24%;
+}
+/*** ===================================================================================== ***/
 /*** MISC ***/
 /*** ===================================================================================== ***/
 .highlight-red {
@@ -88,19 +94,18 @@ label, input, select {
     color: red; /* Red text color */
 }
 .gage_control_container {
-    width: 100%; 
-    overflow: hidden; 
+    display: flex;
+    justify-content: space-between; /* Evenly space out the divs */
+    flex-wrap: wrap; /* Allow wrapping if needed */
 }
 #gage_control_01, #gage_control_02, #gage_control_03, #gage_control_04 {
     width: 24%;
-    padding: 10px; 
-    border: 1px solid #666666;  
-    margin-bottom: 20px; 
+    padding: 10px;
+    border: 1px solid #666666;
+    margin-bottom: 20px;
     margin-top: 20px;
-    float: left;
-    margin-right: 1%;
     height: 110px;
-    vertical-align: middle;
+    box-sizing: border-box; /* Include padding and border in the width and height */
 }
 #notice {
     width: 100%; 

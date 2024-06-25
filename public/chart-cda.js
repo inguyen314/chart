@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const floodLevel = getFloodLevel(floodLevelTimeSeries);
 
                 // Create Data Table
-                document.getElementById('data-table').innerHTML = createTable(series, floodLevel); // floodLevelTimeSeries[0].y
+                document.getElementById('data_table').innerHTML = createTable(series, floodLevel); // floodLevelTimeSeries[0].y
 
                 // Location Data
                 console.log("locationData: ", locationData);
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 plotData(series);
 
                  // Create Data Table
-                 document.getElementById('data-table').innerHTML = createTableWithoutFloodLevel(series);
+                 document.getElementById('data_table').innerHTML = createTableWithoutFloodLevel(series);
 
                  // Call the main function to process and display 6am data
                 processDataAndDisplay(nonEmptyDatasets);
