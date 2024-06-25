@@ -1151,7 +1151,7 @@ function findValueAt6Am(datasets, targetTimeString) {
             const values = dataset.values;
             const unit_id = dataset.units;
             const result = values.find(entry => entry[0] === targetTimeUTC);
-            if (result) {
+            if (result && result[1] != null) {
                 const formattedTime = formatDate(targetDate);
                 return `${formattedTime} = ${result[1].toFixed(2)} ${unit_id}`;
             }
