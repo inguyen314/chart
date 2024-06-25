@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Map each dataset to its corresponding URL
     const urls = datasets.map(data => {
         const queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
-        return `https://wm.mvs.ds.usace.army.mil/php-data-api/public/get_ts_lookback.php?${queryString}`;
+        return `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_ts_lookback.php?${queryString}`;
     });
     console.log("urls = ", urls);
 
@@ -76,9 +76,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dateTimes = firstDataset.map(item => item.date_time);
 
                 // Define the URLs to fetch related data from
-                const url1 = `https://wm.mvs.ds.usace.army.mil/php-data-api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Flood`;
-                const url2 = `https://wm.mvs.ds.usace.army.mil/php-data-api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Min`;
-                const url3 = `https://wm.mvs.ds.usace.army.mil/php-data-api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Max`;
+                const url1 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Flood`;
+                const url2 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Min`;
+                const url3 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Max`;
 
                 // Fetch the related data
                 Promise.all([
@@ -165,9 +165,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dateTimes = firstDataset.map(item => item.date_time);
 
                 // Define the URLs to fetch related data from
-                const url1 = `https://wm.mvs.ds.usace.army.mil/php-data-api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Flood`;
-                const url2 = `https://wm.mvs.ds.usace.army.mil/php-data-api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Min`;
-                const url3 = `https://wm.mvs.ds.usace.army.mil/php-data-api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Max`;
+                const url1 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Flood`;
+                const url2 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Min`;
+                const url3 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Max`;
 
                 // Fetch the related data
                 Promise.all([
