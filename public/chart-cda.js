@@ -814,14 +814,14 @@ function getInitialMinMaxY(datasets) {
     console.log('maxDataY:', maxDataY);
 
     // Adjust minY and maxY based on the parameter_id and calculated minDataY and maxDataY
-    if (datasets[0].parameter_id === "Stage") {
-        // Specific adjustments for "Stage" parameter
+    if (datasets[0].parameter_id === "Stage" || datasets[0].parameter_id === "Elev") {
+        // Specific adjustments for "Stage" or "Elev" parameter
         if (minDataY <= 0) {
             minY = minDataY - 1;
             maxY = maxDataY + 1;
         } else if (0 < minDataY < 900) {
-            minY = minDataY - 3;
-            maxY = maxDataY + 3;
+            minY = minDataY - 1;
+            maxY = maxDataY + 1;
         } else {
             minY = minDataY - (minDataY * 0.1);
             maxY = maxDataY + (maxDataY * 0.1);
@@ -844,7 +844,7 @@ function getInitialMinMaxY(datasets) {
             minY = (Math.round(minDataY / 1000) * 1000) - 10000;
             console.log("Flow parameter: minDataY > 100000, setting minY to", minY);
         } else {
-            minY = minDataY - (minDataY * 0.1);
+            minY = minDataY - (minDataY * 0.05);
             console.log("Flow parameter: default case, setting minY to", minY);
         }
 
@@ -861,7 +861,7 @@ function getInitialMinMaxY(datasets) {
             maxY = (Math.round(maxDataY / 1000) * 1000) + 10000;
             console.log("Flow parameter: maxDataY > 100000, setting maxY to", maxY);
         } else {
-            maxY = maxDataY + ((maxDataY * 0.1) + 5);
+            maxY = maxDataY + (maxDataY * 0.05);
             console.log("Flow parameter: default case, setting maxY to", maxY);
         }
     } else {
