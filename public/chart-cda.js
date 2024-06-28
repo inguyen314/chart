@@ -816,9 +816,12 @@ function getInitialMinMaxY(datasets) {
     // Adjust minY and maxY based on the parameter_id and calculated minDataY and maxDataY
     if (datasets[0].parameter_id === "Stage") {
         // Specific adjustments for "Stage" parameter
-        if (minDataY < 0) {
+        if (minDataY <= 0) {
             minY = minDataY - 1;
             maxY = maxDataY + 1;
+        } else if (0 < minDataY < 900) {
+            minY = minDataY - 3;
+            maxY = maxDataY + 3;
         } else {
             minY = minDataY - (minDataY * 0.1);
             maxY = maxDataY + (maxDataY * 0.1);
