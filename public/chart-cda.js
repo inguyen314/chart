@@ -288,6 +288,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         data: firstDataset.values.map(item => ({ x: item[0], y: item[1] })),
                         borderColor: 'red',
                         backgroundColor: 'red',
+                        // Toggle Button
+                        // borderWidth: 4, // Change the width of the connecting lines
+                        tension: 0.5, // Adjust this value for the desired curve. 0: Represents straight lines. 1: Represents very smooth, rounded curves.
+                        // cubicInterpolationMode: 'default', // Set to 'default' for a solid and smooth line. 
+                            // default (default): This is the default cubic interpolation mode. It uses a single cubic Bezier curve to connect data points.
+                            // monotone: This mode creates a single cubic Bezier curve that is guaranteed to be monotone (non-increasing or non-decreasing) between data points. This can be useful when dealing with data that has natural trends.
+                            // stepped: This mode connects data points with horizontal and vertical lines, creating a stepped appearance. It doesn't use curves and is suitable for step-like data.
+                        // pointRadius: 1, // Set pointRadius to 0 to hide data point dots
+                        // showLine: true, // Show the connecting line
+                        // pointBackgroundColor: 'rgba(0, 0, 255, 1)', // Data point dot color (blue in this example)
+                        hoverBackgroundColor: 'rgba(0, 0, 255, 1)', // blue hoverBackgroundColor and hoverBorderColor: These parameters let you define the background and border colors when a user hovers over a chart element.
+                        // hoverBorderColor: 'rgba(0, 255, 0, 1)', // green 
+                        // hoverBorderWidth: 1,// Controls the border width when hovering over a chart element.
                         fill: false
                     },
                     {
@@ -296,6 +309,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         borderColor: 'blue',
                         backgroundColor: 'blue',
                         fill: false,
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
                         hidden: true // Initially hidden
                     },
                     hingeMinData !== null && {
@@ -304,6 +319,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         borderColor: 'black',
                         backgroundColor: 'black',
                         fill: false,
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
                         hidden: true // Initially hidden
                     },
                     hingeMaxData !== null && {
@@ -312,6 +329,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         borderColor: 'black',
                         backgroundColor: 'black',
                         fill: false,
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
                         hidden: true // Initially hidden
                     },
                     lwrpData !== null && {
@@ -320,6 +339,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         borderColor: 'black',
                         backgroundColor: 'black',
                         fill: false,
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
                         hidden: true // Initially hidden
                     }
                 ].filter(series => series);
