@@ -1155,9 +1155,16 @@ function format6AmTargetTime(date) {
 
 // Function to find value at 6:00 AM from the datasets
 function findValueAt6Am(datasets, targetTimeString) {
+    console.log("datasets @ findValueAt6Am ", datasets);
+
     // Convert target time to UTC
     const targetDate = new Date(targetTimeString);
     const targetTimeUTC = targetDate.getTime();
+
+    // Extract parameterId from name
+    const name = datasets[0]?.name; // assuming name is consistent across datasets
+    const splitName = name.split('.');
+    const parameterId = splitName[1];
 
     // Helper function to format date to 'mm-dd-yyyy hh24mi'
     function formatDate(date) {
@@ -1169,6 +1176,11 @@ function findValueAt6Am(datasets, targetTimeString) {
         return `${mm}-${dd}-${yyyy} ${hh}${mi}`;
     }
 
+    // Helper function to add comma as thousand separator
+    function addThousandSeparator(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
     // Iterate through datasets to find the corresponding value
     for (let dataset of datasets) {
         if (dataset.values && dataset.values.length > 0) {
@@ -1177,7 +1189,21 @@ function findValueAt6Am(datasets, targetTimeString) {
             const result = values.find(entry => entry[0] === targetTimeUTC);
             if (result && result[1] != null) {
                 const formattedTime = formatDate(targetDate);
-                return `${formattedTime} = ${result[1].toFixed(2)} ${unit_id}`;
+                let valueFormatted;
+
+                if (parameterId === "Stage" || parameterId === "Precip") {
+                    valueFormatted = result[1].toFixed(2);
+                } else if (parameterId === "Flow") {
+                    if (result[1] > 20) {
+                        valueFormatted = addThousandSeparator((Math.round(result[1] * 10) / 10).toFixed(0));
+                    } else {
+                        valueFormatted = addThousandSeparator(result[1].toFixed(0));
+                    }
+                } else {
+                    valueFormatted = result[1].toFixed(0);
+                }
+
+                return `${formattedTime} = ${valueFormatted} ${unit_id}`;
             }
         }
     }
