@@ -1155,7 +1155,7 @@ function format6AmTargetTime(date) {
 
 // Function to find value at 6:00 AM from the datasets
 function findValueAt6Am(datasets, targetTimeString) {
-    console.log("datasets @ findValueAt6Am ", datasets);
+    // console.log("datasets @ findValueAt6Am ", datasets);
 
     // Convert target time to UTC
     const targetDate = new Date(targetTimeString);
@@ -1200,7 +1200,7 @@ function findValueAt6Am(datasets, targetTimeString) {
                         valueFormatted = addThousandSeparator(result[1].toFixed(0));
                     }
                 } else {
-                    valueFormatted = result[1].toFixed(0);
+                    valueFormatted = result[1].toFixed(2);
                 }
 
                 return `${formattedTime} = ${valueFormatted} ${unit_id}`;
