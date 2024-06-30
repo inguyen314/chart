@@ -787,7 +787,7 @@ function getInitialMinMaxY(datasets) {
     let minY = Infinity; // Initialize minY to the highest possible number
     let maxY = -Infinity; // Initialize maxY to the lowest possible number
 
-    console.log("datasets @ getInitialMinMaxY", JSON.stringify(datasets, null, 2));
+    console.log("datasets @ getInitialMinMaxY: ", datasets);
 
     // Log initial minY and maxY before adjustments
     console.log('Before adjustments:');
@@ -809,17 +809,23 @@ function getInitialMinMaxY(datasets) {
 
         // Iterate over each data point in the dataset
         dataset.data.forEach((dataPoint, dataIndex) => {
-            const yValue = parseFloat(dataPoint.y); // Parse the y value as a float
-            if (!isNaN(yValue)) {
-                // Only add valid y values to the array
-                allYValues.push(yValue);
-                console.log(`Dataset ${datasetIndex}, data point ${dataIndex}: yValue = ${yValue}`);
+            if (dataPoint.y !== null && dataPoint.y !== undefined) {
+                const yValue = parseFloat(dataPoint.y); // Parse the y value as a float
+                if (!isNaN(yValue)) {
+                    // Only add valid y values to the array
+                    allYValues.push(yValue);
+                    // console.log(`Dataset ${datasetIndex}, data point ${dataIndex}: yValue = ${yValue}`);
+                } else {
+                    // Log a warning if an invalid y value is encountered
+                    console.warn(`Invalid yValue encountered in dataset ${datasetIndex}, data point ${dataIndex}:`, dataPoint.y);
+                }
             } else {
-                // Log a warning if an invalid y value is encountered
-                console.warn(`Invalid yValue encountered in dataset ${datasetIndex}, data point ${dataIndex}:`, dataPoint.y);
+                // Log a warning if a null or undefined y value is encountered
+                console.warn(`Null or undefined yValue encountered in dataset ${datasetIndex}, data point ${dataIndex}:`, dataPoint.y);
             }
         });
     });
+
 
     // If no valid yValues found, return early with default min and max
     if (allYValues.length === 0) {
@@ -948,7 +954,7 @@ function createTable(data, floodLevel) {
         }
         
         // Determine if the current value exceeds the flood level
-        console.log("exceedFloodLevel: ", formattedValue, floodLevel, typeof(formattedValue), typeof(floodLevel));
+        // console.log("exceedFloodLevel: ", formattedValue, floodLevel, typeof(formattedValue), typeof(floodLevel));
         const exceedFloodLevel = parseFloat(formattedValue) > floodLevel;
         console.log("exceedFloodLevel: ", exceedFloodLevel);
 
