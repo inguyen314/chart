@@ -148,35 +148,57 @@ document.addEventListener('DOMContentLoaded', function () {
                     return null; // Return null if fetch failed
                 }),
             
-                fetch(url2).then(response => {
+                fetch(url2)
+                .then(response => {
                     if (!response.ok) {
+                        if (response.status === 404) {
+                            // Handle 404 specifically
+                            console.error('Error 404: Hinge Min resource not found');
+                            return null; // Return null if the resource is not found
+                        }
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
-                }).catch(error => {
-                    // console.error('Error fetching data from url2:', error);
-                    return null; // Return null if fetch failed
+                })
+                .catch(error => {
+                    console.error('Error fetching data from url2:', error);
+                    return null; // Return null if fetch failed for any reason
                 }),
             
-                fetch(url3).then(response => {
+                fetch(url3)
+                .then(response => {
                     if (!response.ok) {
+                        if (response.status === 404) {
+                            // Handle 404 specifically
+                            console.error('Error 404: Hinge Max resource not found');
+                            return null; // Return null if the resource is not found
+                        }
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
-                }).catch(error => {
-                    // console.error('Error fetching data from url3:', error);
-                    return null; // Return null if fetch failed
+                })
+                .catch(error => {
+                    console.error('Error fetching data from url3:', error);
+                    return null; // Return null if fetch failed for any reason
                 }),
 
-                fetch(url4).then(response => {
+                fetch(url4)
+                .then(response => {
                     if (!response.ok) {
+                        if (response.status === 404) {
+                            // Handle 404 specifically
+                            console.error('Error 404: LWRP resource not found');
+                            return null; // Return null if the resource is not found
+                        }
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
-                }).catch(error => {
-                    // console.error('Error fetching data from url4:', error);
-                    return null; // Return null if fetch failed
+                })
+                .catch(error => {
+                    console.error('Error fetching data from url4:', error);
+                    return null; // Return null if fetch failed for any reason
                 }),
+
 
                 fetch(url5).then(response => {
                     if (!response.ok) {
