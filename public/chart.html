@@ -49,6 +49,8 @@
                                         
                                             // Determine the default value of cda based on documentRoot
                                             const cdaDefault = (documentRoot === "https://wm.mvs.ds.usace.army.mil/") ? "internal" : "public";
+
+                                            console.log("cdaDefault: ", cdaDefault);
                                         
                                             // Extract URL parameters
                                             const urlParams = new URLSearchParams(window.location.search);
