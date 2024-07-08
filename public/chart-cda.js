@@ -703,7 +703,7 @@ function plotData(datasets) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Cloud' + ' ' + 'Plot Macro', //'Cloud' + ' ' + datasets[0].parameter_id + ' ' + 'Plot Macro',
+                    text: 'Cloud' + ' ' + 'Chart Macro', //'Cloud' + ' ' + datasets[0].parameter_id + ' ' + 'Plot Macro',
                     font: {
                         size: 24 // Set the font size for the title
                     }
