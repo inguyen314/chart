@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (cda === "public") {
         cdaUrl = "https://cwms-data.usace.army.mil/cwms-data";
     } else if (cda === "internal") {
-        cdaUrl = "https://coe-mvsuwa04mvs.mvs.usace.army.mil:8243/mvs-data";
+        cdaUrl = "https://wm.mvs.ds.usace.army.mil:8243/mvs-data";
     } else {
         cdaUrl = null;
     }
