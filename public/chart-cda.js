@@ -27,6 +27,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentDateTimeMinusLookBack = subtractHoursFromDate(currentDateTime, lookback);
     console.log("currentDateTimeMinusLookBack = ", currentDateTimeMinusLookBack);
 
+     // Add thirty hours from current date and time
+     const currentDateTimeAddLookForward = addHoursFromDate(currentDateTime, lookforward);
+     console.log("currentDateTimeAddLookForward = ", currentDateTimeAddLookForward);
+
     let cdaUrl = null;
     if (cda === "public") {
         cdaUrl = "https://cwms-data.usace.army.mil/cwms-data";
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Map each dataset to its corresponding URL
     const timeseriesUrl = validTsids.map(data => {
         const queryString = data.cwms_ts_id; // Assuming this is correct
-        return `${cdaUrl}/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTime.toISOString()}&office=MVS`;
+        return `${cdaUrl}/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTimeAddLookForward.toISOString()}&office=${office}`;
     });
     console.log("timeseriesUrl = ", timeseriesUrl);
 
@@ -123,12 +127,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const levelIdEffectiveDate = "2024-01-01T08:00:00";
 
             // Define the URLs to fetch related data from
-            const url1 = `https://water.usace.army.mil/cwms-data/levels/${levelIdFlood}?office=MVS&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url2 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMin}?office=MVS&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url3 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMax}?office=MVS&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url4 = `https://water.usace.army.mil/cwms-data/levels/${levelIdLwrp}?office=MVS&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url5 = `https://water.usace.army.mil/cwms-data/locations/${locationId}?office=MVS`;
-            const url6 = `https://water.usace.army.mil/cwms-data/levels/${levelIdNgvd29}?office=MVS&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url1 = `https://water.usace.army.mil/cwms-data/levels/${levelIdFlood}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url2 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMin}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url3 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMax}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url4 = `https://water.usace.army.mil/cwms-data/levels/${levelIdLwrp}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url5 = `https://water.usace.army.mil/cwms-data/locations/${locationId}?office=${office}`;
+            const url6 = `https://water.usace.army.mil/cwms-data/levels/${levelIdNgvd29}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
             // console.log('url1:', url1);
             // console.log('url2:', url2);
             // console.log('url3:', url3);
@@ -795,7 +799,6 @@ function plotData(datasets) {
     });
 }
 
-
 // Function to check Daylight Saving Time
 function isDaylightSavingTime(date) {
     const january = new Date(date.getFullYear(), 0, 1);
@@ -932,6 +935,11 @@ function getInitialMinMaxY(datasets) {
 // Function to get current data time
 function subtractHoursFromDate(date, hoursToSubtract) {
     return new Date(date.getTime() - (hoursToSubtract * 60 * 60 * 1000));
+}
+
+// Function to get current data time
+function addHoursFromDate(date, hoursToAdd) {
+    return new Date(date.getTime() + (hoursToAdd * 60 * 60 * 1000));
 }
 
 // Function to format date time to mm-dd-yyyy
