@@ -3,300 +3,626 @@ document.addEventListener('DOMContentLoaded', function () {
     const loadingIndicator = document.getElementById('loading');
     loadingIndicator.style.display = 'block';
 
-    // Define your datasets
-    const datasets = [
-        { cwms_ts_id: encodeURIComponent(cwms_ts_id), start_day: encodeURIComponent(start_day), end_day: encodeURIComponent(end_day) },
-        { cwms_ts_id: encodeURIComponent(cwms_ts_id_2), start_day: encodeURIComponent(start_day), end_day: encodeURIComponent(end_day) },
-        { cwms_ts_id: encodeURIComponent(cwms_ts_id_3), start_day: encodeURIComponent(start_day), end_day: encodeURIComponent(end_day) },
-        { cwms_ts_id: encodeURIComponent(cwms_ts_id_4), start_day: encodeURIComponent(start_day), end_day: encodeURIComponent(end_day) },
-        { cwms_ts_id: encodeURIComponent(cwms_ts_id_5), start_day: encodeURIComponent(start_day), end_day: encodeURIComponent(end_day) },
-        { cwms_ts_id: encodeURIComponent(cwms_ts_id_6), start_day: encodeURIComponent(start_day), end_day: encodeURIComponent(end_day) },
-        { cwms_ts_id: encodeURIComponent(cwms_ts_id_7), start_day: encodeURIComponent(start_day), end_day: encodeURIComponent(end_day) }
-        // Add more datasets as needed
+    // Define your tsids
+    const tsids = [
+        { cwms_ts_id: encodeURIComponent(cwms_ts_id)},
+        { cwms_ts_id: encodeURIComponent(cwms_ts_id_2)},
+        { cwms_ts_id: encodeURIComponent(cwms_ts_id_3)},
+        { cwms_ts_id: encodeURIComponent(cwms_ts_id_4)},
+        { cwms_ts_id: encodeURIComponent(cwms_ts_id_5)},
+        { cwms_ts_id: encodeURIComponent(cwms_ts_id_6)},
+        { cwms_ts_id: encodeURIComponent(cwms_ts_id_7)}
     ];
-    console.log("datasets = ", datasets);
+    console.log("tsids = ", tsids);
+
+    // Filter out tsids where cwms_ts_id is null or undefined
+    const validTsids = tsids.filter(data => data.cwms_ts_id !== null && data.cwms_ts_id !== undefined && data.cwms_ts_id !== 'null');
+    console.log("validTsids = ", validTsids);
 
     // Get current date and time
     const currentDateTime = new Date();
-    console.log('currentDateTime:', currentDateTime);
-
-    // Subtract two hours from current date and time
-    const currentDateTimeMinus2Hours = subtractHoursFromDate(currentDateTime, 2);
-    console.log('currentDateTimeMinus2Hours :', currentDateTimeMinus2Hours);
+    console.log("currentDateTime = ", currentDateTime);
 
     // Subtract thirty hours from current date and time
-    const currentDateTimeMinus30Hours = subtractHoursFromDate(currentDateTime, 64);
-    console.log('currentDateTimeMinus30Hours :', currentDateTimeMinus30Hours);
+    const currentDateTimeMinusLookBack = subtractHoursFromDate(currentDateTime, lookback);
+    console.log("currentDateTimeMinusLookBack = ", currentDateTimeMinusLookBack);
 
-    // Add thirty hours to current date and time
-    const currentDateTimePlus30Hours = plusHoursFromDate(currentDateTime, 30);
-    console.log('currentDateTimePlus30Hours :', currentDateTimePlus30Hours);
+     // Add thirty hours from current date and time
+     const currentDateTimeAddLookForward = addHoursFromDate(currentDateTime, lookforward);
+     console.log("currentDateTimeAddLookForward = ", currentDateTimeAddLookForward);
 
-    // Add four days to current date and time
-    const currentDateTimePlus4Days = addDaysToDate(currentDateTime, 4);
-    console.log('currentDateTimePlus4Days :', currentDateTimePlus4Days);
+    let cdaUrl = null;
+    if (cda === "public") {
+        cdaUrl = "https://cwms-data.usace.army.mil/cwms-data";
+    } else if (cda === "internal") {
+        cdaUrl = "https://wm.mvs.ds.usace.army.mil:8243/mvs-data";
+    } else {
+        cdaUrl = null;
+    }
 
     // Map each dataset to its corresponding URL
-    const urls = datasets.map(data => {
-        const queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
-        return `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_ts_lookback.php?${queryString}`;
+    const timeseriesUrl = validTsids.map(data => {
+        const queryString = data.cwms_ts_id; // Assuming this is correct
+        return `${cdaUrl}/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTimeAddLookForward.toISOString()}&office=${office}`;
     });
-    console.log("urls = ", urls);
+    console.log("timeseriesUrl = ", timeseriesUrl);
 
-    // Fetch all datasets simultaneously
-    Promise.all(urls.map(url => fetch(url)))
-        .then(responses => {
-            return Promise.all(responses.map(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+    // Fetch all tsids simultaneously
+    Promise.all(
+        timeseriesUrl.map(url =>
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json;version=2'
                 }
-                return response.json();
-            }));
-        })
-        .then(datasets => {
-            console.log('datasets:', datasets);
+            })
+        )
+    )
+    .then(responses => {
+        return Promise.all(responses.map(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }));
+    })
+    .then(datasets => {
+        console.log('datasets:', datasets);
 
-            const nonEmptyDatasets = datasets.filter(data => data && data.length > 0);
+        const nonEmptyDatasets = datasets.filter(data => data.values && data.values.length > 0);
+        console.log('nonEmptyDatasets:', nonEmptyDatasets);
 
-            const firstDataset = nonEmptyDatasets[0];
-            const parameterId = firstDataset[0].parameter_id;
-            const parameterId2 = firstDataset[1].parameter_id;
+        // First Location
+        const firstDataset = nonEmptyDatasets[0];
+        console.log('firstDataset:', firstDataset);
 
-            console.log('parameterId:', parameterId);
-            console.log('parameterId2:', parameterId2);
+        const values = nonEmptyDatasets[0].values;
+        const dateTimes = (values.map(item => item[0])); // const dateTimes = (values.map(item => item[0])).map(formatDate); 
+        console.log('dateTimes:', dateTimes);
 
-            // For single line plot
-            if (nonEmptyDatasets.length === 1 & (parameterId === "Stage" || parameterId === "Elev")) {
-                // Only one dataset has data, plot both dataset and flood levels
-                const firstDataset = nonEmptyDatasets[0];
-                const locationId = firstDataset[0].location_id;
-                const cwmsTsId = firstDataset[0].cwms_ts_id;
-                const parameterId = firstDataset[0].parameter_id;
-                const unitId = firstDataset[0].unit_id;
-                const dateTimes = firstDataset.map(item => item.date_time);
+        const cwmsTsId = firstDataset.name;
+        const unitId = firstDataset.units;
+        const timeZone = firstDataset['time-zone'];
+        const nameParts = firstDataset.name.split('.');
+        const locationId = nameParts[0];
+        const parameterId = nameParts[1];
+        const versionId = nameParts[5];
+        console.log("locationId: ", locationId);  // St Louis-Mississippi
+        console.log("parameterId: ", parameterId);  // Stage
+        console.log("versionId: ", versionId);  // lrgsShef-rev
 
-                // Define the URLs to fetch related data from
-                const url1 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Flood`;
-                const url2 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Min`;
-                const url3 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Max`;
+        // Second Location
+        let parameterId2, unitId2 = null;
+        if (nonEmptyDatasets.length > 1) {
+            const secondDataset = nonEmptyDatasets[1];
+            console.log('secondDataset:', secondDataset);
+            const values2 = nonEmptyDatasets[1].values;
+            const dateTimes2 = (values2.map(item => item[0])).map(formatDate); // Adjusted to use formatDate function
+            console.log('dateTimes2:', dateTimes2);
 
-                // Fetch the related data
-                Promise.all([
-                    fetch(url1).then(response => response.json()),
-                    fetch(url2).then(response => response.json()),
-                    fetch(url3).then(response => response.json())
-                ])
-                .then(dataArray => {
-                    console.log('dataArray:', dataArray);
-                    
-                    const floodLevelData = dataArray[0];
-                    const hingeMinData = dataArray[1];
-                    const hingeMaxData = dataArray[2];
+            const cwmsTsId2 = secondDataset.name;
+            unitId2 = secondDataset.units;
+            const nameParts2 = secondDataset.name.split('.');
+            const locationId2 = nameParts2[0];
+            parameterId2 = nameParts2[1];
+            console.log("locationId2: ", locationId2);  // St Louis-Mississippi
+            console.log("parameterId2: ", parameterId2);  // Stage
+            console.log("unitId2: ", unitId2);  // ft
+        }
 
-                    const floodLevelTimeSeries = dateTimes.map(dateTime => ({
-                        x: dateTime,
-                        y: floodLevelData["constant_level"]
-                    }));
+        // Chart Type Setup
+        if (nonEmptyDatasets.length === 1 & (parameterId === "Stage" || parameterId === "Elev")) {
+            console.log("============== for single dataset plot with location levels ==============");
 
-                    const hingeMinTimeSeries = hingeMinData !== null ? dateTimes.map(dateTime => ({
-                        x: dateTime,
-                        y: hingeMinData["constant_level"]
-                    })) : [];
+            const levelIdFlood = locationId + ".Stage.Inst.0.Flood";
+            // console.log(levelIdFlood);
+            const levelIdHingeMin = locationId + ".Height.Inst.0.Hinge Min";
+            // console.log(levelIdHingeMin);
+            const levelIdHingeMax = locationId + ".Height.Inst.0.Hinge Max";
+            // console.log(levelIdHingeMax);
+            const levelIdLwrp = locationId + ".Stage.Inst.0.LWRP";
+            // console.log(levelIdLwrp);
+            const levelIdNgvd29 = locationId + ".Height.Inst.0.NGVD29";
+            // console.log(levelIdLwrp);
+            const levelIdEffectiveDate = "2024-01-01T08:00:00";
 
-                    const hingeMaxTimeSeries = hingeMaxData !== null ? dateTimes.map(dateTime => ({
-                        x: dateTime,
-                        y: hingeMaxData["constant_level"]
-                    })) : [];
+            // Define the URLs to fetch related data from
+            const url1 = `https://water.usace.army.mil/cwms-data/levels/${levelIdFlood}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url2 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMin}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url3 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMax}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url4 = `https://water.usace.army.mil/cwms-data/levels/${levelIdLwrp}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url5 = `https://water.usace.army.mil/cwms-data/locations/${locationId}?office=${office}`;
+            const url6 = `https://water.usace.army.mil/cwms-data/levels/${levelIdNgvd29}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            // console.log('url1:', url1);
+            // console.log('url2:', url2);
+            // console.log('url3:', url3);
+            // console.log('url4:', url4);
+            // console.log('url5:', url5);
+            // console.log('url6:', url6);
 
-                    const series = [
-                        {
-                            label: cwmsTsId, //'Dataset',
-                            parameter_id: parameterId,
-                            unit_id: unitId,
-                            data: firstDataset.map(item => ({ x: item.date_time, y: item.value })),
-                            borderColor: 'red',
-                            backgroundColor: 'red',
-                            fill: false
-                        },
-                        {
-                            label: 'Flood Level',
-                            data: floodLevelTimeSeries,
-                            borderColor: 'blue',
-                            backgroundColor: 'blue',
-                            fill: false,
-                            hidden: true // Initially hidden
-                        },
-                        hingeMinData !== null && {
-                            label: 'Hinge Min',
-                            data: hingeMinTimeSeries,
-                            borderColor: 'black',
-                            backgroundColor: 'black',
-                            fill: false,
-                            hidden: true // Initially hidden
-                        },
-                        hingeMaxData !== null && {
-                            label: 'Hinge Max',
-                            data: hingeMaxTimeSeries,
-                            borderColor: 'black',
-                            backgroundColor: 'black',
-                            fill: false,
-                            hidden: true // Initially hidden
+            // Fetch the related data
+            Promise.all([
+                fetch(url1).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).catch(error => {
+                    // console.error('Error fetching data from url1:', error);
+                    return null; // Return null if fetch failed
+                }),
+            
+                fetch(url2)
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            // Handle 404 specifically
+                            console.error('Error 404: Hinge Min resource not found');
+                            return null; // Return null if the resource is not found
                         }
-                    ].filter(series => series);
-
-                    // console.log(series);
-
-                    plotData(series);
-
-                    loadingIndicator.style.display = 'none';
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
                 })
                 .catch(error => {
-                    console.error('Error fetching related data:', error);
-                    loadingIndicator.style.display = 'none';
-                });
-            // For Flow, Precip and Etc.
-            } else if (nonEmptyDatasets.length === 1) {
-                // Only one dataset has data, plot both dataset and flood levels
-                const firstDataset = nonEmptyDatasets[0];
-                const locationId = firstDataset[0].location_id;
-                const cwmsTsId = firstDataset[0].cwms_ts_id;
-                const parameterId = firstDataset[0].parameter_id;
-                const unitId = firstDataset[0].unit_id;
-                const dateTimes = firstDataset.map(item => item.date_time);
-
-                // Define the URLs to fetch related data from
-                const url1 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Flood`;
-                const url2 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Min`;
-                const url3 = `https://wm.mvs.ds.usace.army.mil/php_data_api/public/get_specified_level_id_level.php?location_id=${locationId}&specified_level_id_level=Hinge Max`;
-
-                // Fetch the related data
-                Promise.all([
-                    fetch(url1).then(response => response.json()),
-                    fetch(url2).then(response => response.json()),
-                    fetch(url3).then(response => response.json())
-                ])
-                .then(dataArray => {
-                    console.log('dataArray:', dataArray);
-                    
-                    const series = [
-                        {
-                            label: cwmsTsId, //'Dataset',
-                            parameter_id: parameterId,
-                            unit_id: unitId,
-                            data: firstDataset.map(item => ({ x: item.date_time, y: item.value })),
-                            borderColor: 'red',
-                            backgroundColor: 'red',
-                            fill: false
-                        } 
-                    ].filter(series => series);
-
-                    // console.log(series);
-
-                    plotData(series);
-
-                    loadingIndicator.style.display = 'none';
+                    console.error('Error fetching data from url2:', error);
+                    return null; // Return null if fetch failed for any reason
+                }),
+            
+                fetch(url3)
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            // Handle 404 specifically
+                            console.error('Error 404: Hinge Max resource not found');
+                            return null; // Return null if the resource is not found
+                        }
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
                 })
                 .catch(error => {
-                    console.error('Error fetching related data:', error);
-                    loadingIndicator.style.display = 'none';
+                    console.error('Error fetching data from url3:', error);
+                    return null; // Return null if fetch failed for any reason
+                }),
+
+                fetch(url4)
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            // Handle 404 specifically
+                            console.error('Error 404: LWRP resource not found');
+                            return null; // Return null if the resource is not found
+                        }
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    console.error('Error fetching data from url4:', error);
+                    return null; // Return null if fetch failed for any reason
+                }),
+
+
+                fetch(url5).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).catch(error => {
+                    // console.error('Error fetching data from url5:', error);
+                    return null; // Return null if fetch failed
+                }),
+                fetch(url6).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).catch(error => {
+                    // console.error('Error fetching data from url6:', error);
+                    return null; // Return null if fetch failed
+                })
+            ])
+            .then(metaDataArray => {
+                console.log('metaDataArray:', metaDataArray);
+                
+                const floodLevelData = metaDataArray[0];
+                const hingeMinData = metaDataArray[1];
+                const hingeMaxData = metaDataArray[2];
+                const lwrpData = metaDataArray[3];
+                const locationData = metaDataArray[4];
+                const ngvd29Data = metaDataArray[5];
+
+                const floodLevelTimeSeries = dateTimes.map(dateTime => {
+                    // Check if floodLevelData contains a valid constant-level
+                    if (floodLevelData && floodLevelData["constant-value"] !== undefined) {
+                        // Set constant-value to null if it's greater than 900
+                        const constantValue = floodLevelData["constant-value"] > 900 ? null : floodLevelData["constant-value"];
+                        return {
+                            x: dateTime,
+                            y: constantValue
+                        };
+                    } else {
+                        // Handle case where constant-level is not found or not valid
+                        return {
+                            x: dateTime,
+                            y: null // or any default value you want to assign
+                        };
+                    }
                 });
-            // For multiple line plots where parameter id are the same
-            } else if (nonEmptyDatasets.length > 1 & (parameterId === parameterId2)) {
-                // More than one dataset has data, plot both dataset only
-                const firstDataset = nonEmptyDatasets[0];
-                const locationId = firstDataset[0].location_id;
-                const cwmsTsId = firstDataset[0].cwms_ts_id;
-                const parameterId = firstDataset[0].parameter_id;
-                const unitId = firstDataset[0].unit_id;
-                const dateTimes = firstDataset.map(item => item.date_time);
+                console.log("floodLevelTimeSeries: ", floodLevelTimeSeries);
 
-                // More than one dataset has data, plot only the datasets
-                const colors = [
-                    'rgba(255, 99, 132, 1)',   // Red
-                    'rgba(54, 162, 235, 1)',   // Blue
-                    'rgba(75, 192, 192, 1)',   // Teal
-                    'rgba(153, 102, 255, 1)',  // Purple
-                    'rgba(255, 159, 64, 1)',   // Orange
-                    'rgba(255, 206, 86, 1)',   // Yellow
-                    'rgba(231, 233, 237, 1)'   // Gray
-                ];
-
-                const series = nonEmptyDatasets.map((data, index) => {
-                    const cwmsTsId = data[0].cwms_ts_id; // Retrieve cwmsTsId from each dataset
-            
-                    return {
-                        label: cwmsTsId, // Unique label for each dataset
-                        parameter_id: data[0].parameter_id,
-                        unit_id: data[0].unit_id,
-                        data: data.map(item => ({ x: item.date_time, y: item.value })),
-                        borderColor: colors[index % colors.length],
-                        backgroundColor: colors[index % colors.length],
-                        fill: false
-                    };
+                const hingeMinTimeSeries = dateTimes.map(dateTime => {
+                    // Check if hingeMinData contains a valid constant-level
+                    if (hingeMinData && hingeMinData["constant-value"] !== undefined) {
+                        return {
+                            x: dateTime,
+                            y: hingeMinData["constant-value"]
+                        };
+                    } else {
+                        // Handle case where constant-level is not found or not valid
+                        return {
+                            x: dateTime,
+                            y: null // or any default value you want to assign
+                        };
+                    }
                 });
+                console.log("hingeMinTimeSeries: ", hingeMinTimeSeries);
 
-                // console.log(series);
+                const hingeMaxTimeSeries = dateTimes.map(dateTime => {
+                    // Check if hingeMaxData contains a valid constant-level
+                    if (hingeMaxData && hingeMaxData["constant-value"] !== undefined) {
+                        return {
+                            x: dateTime,
+                            y: hingeMaxData["constant-value"]
+                        };
+                    } else {
+                        // Handle case where constant-level is not found or not valid
+                        return {
+                            x: dateTime,
+                            y: null // or any default value you want to assign
+                        };
+                    }
+                });
+                console.log("hingeMaxTimeSeries: ", hingeMaxTimeSeries);
 
-                plotData(series);
-                loadingIndicator.style.display = 'none';
-            // For multiple line plots where parameter ids are NOT the same
-            } else if (nonEmptyDatasets.length > 1 & (parameterId !== parameterId2)) {
-                // More than one dataset has data, plot both dataset only
-                const firstDataset = nonEmptyDatasets[0];
-                const locationId = firstDataset[0].location_id;
-                const cwmsTsId = firstDataset[0].cwms_ts_id;
-                const parameterId = firstDataset[0].parameter_id;
-                const unitId = firstDataset[0].unit_id;
-                const dateTimes = firstDataset.map(item => item.date_time);
+                const lwrpTimeSeries = dateTimes.map(dateTime => {
+                    // Check if lwrpData contains a valid constant-level
+                    if (lwrpData && lwrpData["constant-value"] !== undefined) {
+                        // Set constant-value to null if it's greater than 900
+                        const constantValue = lwrpData["constant-value"] > 900 ? null : lwrpData["constant-value"];
+                        return {
+                            x: dateTime,
+                            y: constantValue
+                        };
+                    } else {
+                        // Handle case where constant-level is not found or not valid
+                        return {
+                            x: dateTime,
+                            y: null // or any default value you want to assign
+                        };
+                    }
+                });
+                console.log("lwrpTimeSeries: ", lwrpTimeSeries);
 
-                // More than one dataset has data, plot only the datasets
-                const colors = [
-                    'rgba(255, 99, 132, 1)',   // Red
-                    'rgba(54, 162, 235, 1)',   // Blue
-                    'rgba(75, 192, 192, 1)',   // Teal
-                    'rgba(153, 102, 255, 1)',  // Purple
-                    'rgba(255, 159, 64, 1)',   // Orange
-                    'rgba(255, 206, 86, 1)',   // Yellow
-                    'rgba(231, 233, 237, 1)'   // Gray
-                ];
-
-                const series = nonEmptyDatasets.map((data, index) => {
-                    const cwmsTsId = data[0].cwms_ts_id;
-                    const parameterId = data[0].parameter_id;
-            
-                    return {
+                const series = [
+                    {
                         label: cwmsTsId,
                         parameter_id: parameterId,
-                        unit_id: data[0].unit_id,
-                        data: data.map(item => ({ x: item.date_time, y: item.value })),
-                        borderColor: colors[index % colors.length],
-                        backgroundColor: colors[index % colors.length],
+                        unit_id: unitId,
+                        time_zone: timeZone,
+                        data: firstDataset.values.map(item => ({ x: item[0], y: item[1] })),
+                        borderColor: 'red',
+                        backgroundColor: 'red',
+                        // Toggle Button
+                        // borderWidth: 4, // Change the width of the connecting lines
+                        tension: 0.5, // Adjust this value for the desired curve. 0: Represents straight lines. 1: Represents very smooth, rounded curves.
+                        // cubicInterpolationMode: 'default', // Set to 'default' for a solid and smooth line. 
+                            // default (default): This is the default cubic interpolation mode. It uses a single cubic Bezier curve to connect data points.
+                            // monotone: This mode creates a single cubic Bezier curve that is guaranteed to be monotone (non-increasing or non-decreasing) between data points. This can be useful when dealing with data that has natural trends.
+                            // stepped: This mode connects data points with horizontal and vertical lines, creating a stepped appearance. It doesn't use curves and is suitable for step-like data.
+                        // pointRadius: 1, // Set pointRadius to 0 to hide data point dots
+                        // showLine: true, // Show the connecting line
+                        // pointBackgroundColor: 'rgba(0, 0, 255, 1)', // Data point dot color (blue in this example)
+                        hoverBackgroundColor: 'rgba(0, 0, 255, 1)', // blue hoverBackgroundColor and hoverBorderColor: These parameters let you define the background and border colors when a user hovers over a chart element.
+                        // hoverBorderColor: 'rgba(0, 255, 0, 1)', // green 
+                        // hoverBorderWidth: 1,// Controls the border width when hovering over a chart element.
+                        fill: false
+                    },
+                    {
+                        label: 'Flood Level',
+                        data: floodLevelTimeSeries,
+                        borderColor: 'blue',
+                        backgroundColor: 'blue',
                         fill: false,
-                        yAxisID: parameterId // Assign the y-axis ID based on parameterId
-                    };
-                });
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
+                        hidden: true // Initially hidden
+                    },
+                    hingeMinData !== null && {
+                        label: 'Hinge Min',
+                        data: hingeMinTimeSeries,
+                        borderColor: 'black',
+                        backgroundColor: 'black',
+                        fill: false,
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
+                        hidden: true // Initially hidden
+                    },
+                    hingeMaxData !== null && {
+                        label: 'Hinge Max',
+                        data: hingeMaxTimeSeries,
+                        borderColor: 'black',
+                        backgroundColor: 'black',
+                        fill: false,
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
+                        hidden: true // Initially hidden
+                    },
+                    lwrpData !== null && {
+                        label: 'LWRP',
+                        data: lwrpTimeSeries,
+                        borderColor: 'black',
+                        backgroundColor: 'black',
+                        fill: false,
+                        borderWidth: 3, // Change the width of the connecting lines
+                        pointRadius: 0.0, // Set pointRadius to 0 to hide data point dots
+                        hidden: true // Initially hidden
+                    }
+                ].filter(series => series);
+
+                console.log("series: ", (series));
+
+                // Create Chart JS
+                plotData(series);
+
+                // Get flood level
+                const floodLevel = getFloodLevel(floodLevelTimeSeries);
+
+                // Create Data Table
+                document.getElementById('data_table').innerHTML = createTable(series, floodLevel); // floodLevelTimeSeries[0].y
+
+                // Location Data
+                console.log("locationData: ", locationData);
+                // Call the function with the locationData object
+                displayLocationData(locationData, ngvd29Data, versionId);
+
+                // NGVD29 Data
+                console.log("ngvd29Data: ", ngvd29Data);
+                // Call the function with the locationData object
+                displayNgvd29Data(ngvd29Data, locationData, versionId);
+
+                // Call the main function to process and display 6am data
+                processDataAndDisplay(nonEmptyDatasets);
+
+                loadingIndicator.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error fetching related data:', error);
+                loadingIndicator.style.display = 'none';
+            });
+        } else if (nonEmptyDatasets.length === 1) {
+            console.log("============== for plotting flow, precip and water quality ==============");
+
+                const series = [
+                    {
+                        label: cwmsTsId,
+                        parameter_id: parameterId,
+                        unit_id: unitId,
+                        time_zone: timeZone,
+                        data: firstDataset.values.map(item => ({ x: item[0], y: item[1] })), // Mapping values to x and y properties
+                        borderColor: 'red',
+                        backgroundColor: 'red',
+                        fill: false
+                    }
+                ].filter(series => series);
 
                 // console.log(series);
 
                 plotData(series);
+
+                 // Create Data Table
+                 document.getElementById('data_table').innerHTML = createTableWithoutFloodLevel(series);
+
+                 // Call the main function to process and display 6am data
+                processDataAndDisplay(nonEmptyDatasets);
+
+                // No metadata
+                document.getElementById("gage_control_04").innerText = "Data available for single stage time series.";
+
                 loadingIndicator.style.display = 'none';
-            } else {
-                console.log('No valid datasets to display.');
-                loadingIndicator.style.display = 'none';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
+            
+        } else if (nonEmptyDatasets.length > 1 & (parameterId === parameterId2)) {
+            console.log("============== for multiple dataset plots with the same parameter id ==============");
+
+            // More than one dataset has data, plot only the datasets
+            const colors = [
+                'rgba(255, 99, 132, 1)',   // Red
+                'rgba(54, 162, 235, 1)',   // Blue
+                'rgba(0, 128, 0, 1)',      // Green
+                'rgba(153, 102, 255, 1)',  // Purple
+                'rgba(255, 159, 64, 1)',   // Orange
+                'rgba(255, 206, 86, 1)',   // Yellow
+                'rgba(169, 169, 169, 1)'   // Darker Gray
+            ];
+            
+
+            const series = nonEmptyDatasets.map((data, index) => {
+                const cwmsTsId = data.name; // Retrieve cwmsTsId from each dataset
+        
+                return {
+                    label: cwmsTsId, // Unique label for each dataset
+                    parameter_id: parameterId,
+                    unit_id: unitId,
+                    time_zone: timeZone,
+                    data: data.values.map(item => ({ x: item[0], y: item[1] })),
+                    borderColor: colors[index % colors.length],
+                    backgroundColor: colors[index % colors.length],
+                    fill: false
+                };
+            });
+
+            // console.log(series);
+
+            // Plot Data
+            plotData(series);
+
+            // Call the main function to process and display 6am data
+            processDataAndDisplay(nonEmptyDatasets);
+
+            // No metadata
+            document.getElementById("gage_control_04").innerText = "Data available for single stage time series.";
+
             loadingIndicator.style.display = 'none';
-        });
+        } else if (nonEmptyDatasets.length > 1 & (parameterId !== parameterId2)) {
+            console.log("===== For multiple line plots where parameter id are NOT the same =====");
+        
+            // More than one dataset has data, plot only the datasets
+            const colors = [
+                'rgba(255, 99, 132, 1)',   // Red
+                'rgba(54, 162, 235, 1)',   // Blue
+                'rgba(75, 192, 192, 1)',   // Teal
+                'rgba(153, 102, 255, 1)',  // Purple
+                'rgba(255, 159, 64, 1)',   // Orange
+                'rgba(255, 206, 86, 1)',   // Yellow
+                'rgba(231, 233, 237, 1)'   // Gray
+            ];
+
+            const series = nonEmptyDatasets.map((data, index) => {
+                // Extracting dataset details
+                const cwmsTsId = data.name; // The name of the dataset
+                const parameterId = data.name.split('.')[1]; // The parameter ID from the dataset name
+                const unitId = data.units; // The unit ID
+            
+                // Formatting the data points
+                const formattedData = data.values.map(item => ({ x: item[0], y: item[1] }));
+            
+                // Returning the series object
+                return {
+                    label: cwmsTsId,
+                    parameter_id: parameterId,
+                    unit_id: unitId,
+                    data: formattedData,
+                    borderColor: colors[index % colors.length], // Cycling through colors
+                    backgroundColor: colors[index % colors.length], // Cycling through colors
+                    fill: false, // Not filling the area under the line
+                    yAxisID: parameterId // Linking to the Y-axis
+                };
+            });
+            
+            console.log("series: ", series);
+
+            // Plot Data
+            plotData(series);
+
+            // Call the main function to process and display 6am data
+            processDataAndDisplay(nonEmptyDatasets);
+
+            loadingIndicator.style.display = 'none';
+        } else {
+            console.log('No valid datasets to display.');
+            loadingIndicator.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        loadingIndicator.style.display = 'none';
+    });
 });
 
 // Function to plot data using Chart.js
 function plotData(datasets) {
-    console.log('datasets:', datasets);
+    console.log('datasets @ plotData: ', datasets);
+
+    // Extract unique parameter IDs for creating multiple y-axes, excluding null and undefined
+    const uniqueParameterIds = [...new Set(datasets.map(item => item.parameter_id).filter(id => id != null))];
+    console.log('uniqueParameterIds:', uniqueParameterIds);
+
+    // Create a mapping for unique parameter IDs to 'y0' and 'y1'
+    const parameterIdToYAxis = {};
+
+    if (uniqueParameterIds.length === 1) {
+        // If there's only one parameterId, map it to both 'y0' and 'y1'
+        const parameterId = uniqueParameterIds[0];
+        parameterIdToYAxis[parameterId] = 'y';
+        // parameterIdToYAxis[parameterId] = 'y1'; // or choose 'y1', depending on your logic
+    } else {
+        // If there are two parameterIds, map them alternately to 'y0' and 'y1'
+        uniqueParameterIds.forEach((id, index) => {
+            parameterIdToYAxis[id] = index % 2 === 0 ? 'y0' : 'y1';
+        });
+    }
+
+    // Log the entire mapping object
+    console.log('parameterIdToYAxis:', parameterIdToYAxis);
+
+    // Apply the mapping to the datasets
+    datasets.forEach(dataset => {
+        dataset.yAxisID = parameterIdToYAxis[dataset.parameter_id];
+    });
 
     // Calculate initial minY and maxY from visible datasets
-    const { minY, maxY } = getInitialMinMaxY(datasets);
+    let minY, maxY;
+
+    if (uniqueParameterIds.length === 1) {
+        const initialMinMax = getInitialMinMaxY(datasets); // Implement getInitialMinMaxY function if not already defined
+        minY = initialMinMax.minY;
+        maxY = initialMinMax.maxY;
+    } else {
+        const initialMinMaxDual = getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds); // Implement getInitialMinMaxYDualAxis2 function if not already defined
+        minY = initialMinMaxDual.minY;
+        maxY = initialMinMaxDual.maxY;
+    }
+
+    console.log('minY:', minY);
+    console.log('maxY:', maxY);
+
+    // Create y-axes configuration dynamically if there are unique parameter IDs
+    let yScales = {};
+
+    if (uniqueParameterIds.length > 1) {
+        console.log("Dual Axis yScales");
+        yScales = {
+            y0: {
+                min: minY.y0,
+                max: maxY.y0,
+                type: 'linear',
+                position: 'left',
+                title: {
+                    display: true,
+                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').parameter_id + ' (' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y0').unit_id + ')'
+                }
+            },
+            y1: {
+                min: minY.y1,
+                max: maxY.y1,
+                type: 'linear',
+                position: 'right',
+                title: {
+                    display: true,
+                    text: datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').parameter_id + ' (' + datasets.find(ds => parameterIdToYAxis[ds.parameter_id] === 'y1').unit_id + ')'
+                }
+            }
+        };
+    } else {
+        console.log("Single Axis yScales");
+        yScales = {
+            y: {
+                min: minY,
+                max: maxY,
+                type: 'linear',
+                position: 'left',
+                title: {
+                    display: true,
+                    text: datasets[0].parameter_id + ' (' + datasets[0].unit_id + ')',
+                    font: {
+                        size: 14 // Set the font size for the y-axis title
+                    }
+                }
+            }
+        };
+    }
+
 
     const ctx = document.getElementById('myChart').getContext('2d');
     const chart = new Chart(ctx, {
@@ -369,37 +695,19 @@ function plotData(datasets) {
                     },
                     title: {
                         display: true,
-                        text: 'Date Time',
+                        text: 'Date Time' + " " + "(" + datasets[0].time_zone + ")",
                         fontColor: 'black',
                         font: {
                             size: 14 // Set the font size for the y-axis title
                         }
                     }
                 },
-                y: {
-                    // Set initial min and max based on initial calculation
-                    min: minY,
-                    max: maxY,
-                    type: 'linear',
-                    position: 'left',
-                    title: {
-                        display: true,
-                        text: datasets[0].parameter_id + ' ' + '(' + datasets[0].unit_id + ')',
-                        font: {
-                            size: 14 // Set the font size for the y-axis title
-                        }
-                    },
-                    ticks: {
-                        font: {
-                            size: 12 // Set the font size for the y-axis labels
-                        }
-                    }
-                }
+                ...yScales
             },
             plugins: {
                 title: {
                     display: true,
-                    text: datasets[0].parameter_id + " " + 'Plot Macro',
+                    text: 'Cloud' + ' ' + 'Chart Macro', //'Cloud' + ' ' + datasets[0].parameter_id + ' ' + 'Plot Macro',
                     font: {
                         size: 24 // Set the font size for the title
                     }
@@ -407,37 +715,85 @@ function plotData(datasets) {
                 legend: {
                     display: true,
                     onClick: function(e, legendItem, legend) {
-                        const index = legendItem.datasetIndex;
-                        const meta = chart.getDatasetMeta(index);
-                        const dataset = chart.data.datasets[index];
-
-                        // Toggle visibility of the clicked dataset
-                        dataset.hidden = !dataset.hidden;
-
+                        // Determine if there are multiple unique parameter IDs
+                        if (uniqueParameterIds.length > 1) {
+                            console.log("onClick Dual Chart");
+                    
+                            const index = legendItem.datasetIndex;
+                            const meta = chart.getDatasetMeta(index);
+                            const dataset = chart.data.datasets[index];
+                    
+                            // Toggle visibility of the clicked dataset
+                            dataset.hidden = !dataset.hidden;
+                            const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
+                            
+                            // Recalculate min and max Y values for visible datasets
+                            const { minY, maxY } = getInitialMinMaxYDualAxis2(visibleDatasets, uniqueParameterIds);
+                    
+                            // Update y-axes min and max
+                            Object.keys(chart.options.scales).forEach(scale => {
+                                if (scale !== 'x' && minY[scale] !== undefined && maxY[scale] !== undefined) {
+                                    chart.options.scales[scale].min = minY[scale];
+                                    chart.options.scales[scale].max = maxY[scale];
+                                }
+                            });
+                        } else {
+                            console.log("onClick Single Chart");
+                    
+                            const index = legendItem.datasetIndex;
+                            const dataset = chart.data.datasets[index];
+                    
+                            // Toggle visibility of the clicked dataset
+                            dataset.hidden = !dataset.hidden;
+                    
+                            // Recalculate min and max Y values for all datasets
+                            const { minY, maxY } = getInitialMinMaxY(chart.data.datasets);
+                    
+                            // Update y-axis min and max
+                            chart.options.scales.y.min = minY;
+                            chart.options.scales.y.max = maxY;
+                        }
+                    
+                        // Update the chart after modifications
+                        chart.update(datasets);
+                    }                    
+                },
+                beforeUpdate: function(chart) {
+                    // Check if there are multiple unique parameter IDs
+                    if (uniqueParameterIds.length > 1) {
+                        console.log("beforeUpdate Dual Chart");
+                
+                        // Filter visible datasets
+                        const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
+                
                         // Recalculate min and max Y values for visible datasets
-                        const { minY, maxY } = getInitialMinMaxY(chart.data.datasets);
-
-                        console.log('Updated minY:', minY);
-                        console.log('Updated maxY:', maxY);
-
+                        const { minY, maxY } = getInitialMinMaxYDualAxis2(visibleDatasets, uniqueParameterIds);
+                
+                        // Update y-axes min and max for each scale
+                        Object.keys(chart.options.scales).forEach(scaleKey => {
+                            if (scaleKey !== 'x' && minY[scaleKey] !== undefined && maxY[scaleKey] !== undefined) {
+                                chart.options.scales[scaleKey].min = minY[scaleKey];
+                                chart.options.scales[scaleKey].max = maxY[scaleKey];
+                            }
+                        });
+                    } else {
+                        console.log("beforeUpdate Single Chart");
+                
+                        // Filter visible datasets
+                        const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
+                
+                        // Recalculate min and max Y values for visible datasets
+                        const { minY, maxY } = getInitialMinMaxY(visibleDatasets);
+                
                         // Update y-axis min and max
                         chart.options.scales.y.min = minY;
                         chart.options.scales.y.max = maxY;
-
-                        // Update the chart
-                        chart.update();
                     }
-                },
-                beforeUpdate: function(chart) {
-                    const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
-                    const { minY, maxY } = getInitialMinMaxY(visibleDatasets);
-
-                    chart.options.scales.y.min = minY;
-                    chart.options.scales.y.max = maxY;
-
+                
+                    // Log the updated minY and maxY values for debugging
                     console.log('Updated minY:', minY);
                     console.log('Updated maxY:', maxY);
-                }
+                }                
             }
         }
     });
@@ -451,33 +807,12 @@ function isDaylightSavingTime(date) {
     return date.getTimezoneOffset() < stdTimezoneOffset;
 }
 
-// Function to calculate min and max Y values from visible datasets
-function getMinMaxY(datasets) {
-    let minY = Infinity;
-    let maxY = -Infinity;
-
-    datasets.forEach((dataset) => {
-        if (dataset.hidden) return; // Skip hidden datasets
-        dataset.data.forEach((dataPoint) => {
-            const yValue = parseFloat(dataPoint.y);
-            if (yValue < minY) {
-                minY = yValue;
-            }
-            if (yValue > maxY) {
-                maxY = yValue;
-            }
-        });
-    });
-
-    return { minY, maxY };
-}
-
 // Function to calculate initial min and max Y values from visible datasets
 function getInitialMinMaxY(datasets) {
-    let minY = Infinity; // Initialize minY to Infinity (highest possible number)
-    let maxY = -Infinity; // Initialize maxY to -Infinity (lowest possible number)
+    let minY = Infinity; // Initialize minY to the highest possible number
+    let maxY = -Infinity; // Initialize maxY to the lowest possible number
 
-    console.log("datasets getInitialMinMaxY ", datasets);
+    console.log("datasets @ getInitialMinMaxY: ", datasets);
 
     // Log initial minY and maxY before adjustments
     console.log('Before adjustments:');
@@ -487,76 +822,105 @@ function getInitialMinMaxY(datasets) {
     // Arrays to store all yValues for calculating min and max
     let allYValues = [];
 
-    datasets.forEach((dataset) => {
-        if (dataset.hidden) return; // Skip hidden datasets
+    // Iterate over each dataset
+    datasets.forEach((dataset, datasetIndex) => {
+        if (dataset.hidden) {
+            // Skip hidden datasets
+            console.log(`Dataset ${datasetIndex} is hidden, skipping...`);
+            return;
+        }
 
-        dataset.data.forEach((dataPoint) => {
-            const yValue = parseFloat(dataPoint.y);
-            allYValues.push(yValue); // Collect all yValues from visible datasets
+        console.log(`Processing dataset ${datasetIndex}, parameter_id: ${dataset.parameter_id}`);
+
+        // Iterate over each data point in the dataset
+        dataset.data.forEach((dataPoint, dataIndex) => {
+            if (dataPoint.y !== null && dataPoint.y !== undefined) {
+                const yValue = parseFloat(dataPoint.y); // Parse the y value as a float
+                if (!isNaN(yValue)) {
+                    // Only add valid y values to the array
+                    allYValues.push(yValue);
+                    // console.log(`Dataset ${datasetIndex}, data point ${dataIndex}: yValue = ${yValue}`);
+                } else {
+                    // Log a warning if an invalid y value is encountered
+                    console.warn(`Invalid yValue encountered in dataset ${datasetIndex}, data point ${dataIndex}:`, dataPoint.y);
+                }
+            } else {
+                // Log a warning if a null or undefined y value is encountered
+                console.warn(`Null or undefined yValue encountered in dataset ${datasetIndex}, data point ${dataIndex}:`, dataPoint.y);
+            }
         });
     });
 
-    // Find min and max yValues from collected array
+
+    // If no valid yValues found, return early with default min and max
+    if (allYValues.length === 0) {
+        console.error('No valid yValues found in the datasets.');
+        return { minY, maxY };
+    }
+
+    // Find min and max yValues from the collected array
     const minDataY = Math.min(...allYValues);
     const maxDataY = Math.max(...allYValues);
 
-    console.log('minDataY:', typeof(minDataY));
+    console.log('minDataY:', minDataY);
     console.log('maxDataY:', maxDataY);
 
-    // Set minY and maxY based on calculated minDataY and maxDataY
-    if (datasets[0].parameter_id === "Stage") {
-        if (minDataY < 0) {
-            minY = minDataY - 1; // Adjust minY for Stage parameter
-            maxY = maxDataY + 1; // Adjust maxY for Stage parameter
+    // Adjust minY and maxY based on the parameter_id and calculated minDataY and maxDataY
+    if (datasets[0].parameter_id === "Stage" || datasets[0].parameter_id === "Elev") {
+        // Specific adjustments for "Stage" or "Elev" parameter
+        if (minDataY <= 0) {
+            minY = minDataY - 1;
+            maxY = maxDataY + 1;
+        } else if (0 < minDataY < 900) {
+            minY = minDataY - 1;
+            maxY = maxDataY + 1;
         } else {
-            minY = minDataY - (minDataY*0.1); // Adjust minY for Stage parameter
-            maxY = maxDataY + (maxDataY*0.1); // Adjust maxY for Stage parameter
+            minY = minDataY - (minDataY * 0.1);
+            maxY = maxDataY + (maxDataY * 0.1);
         }
-    } else if (datasets[0].parameter_id === "Flow") { // Adjustments for Flow parameter
-        // minY = minDataY - 10; // Example adjustment for Flow
+    } else if (datasets[0].parameter_id === "Flow") {
+        // Specific adjustments for "Flow" parameter
         if (minDataY <= 0) {
             minY = 0;
-            console.log("flow id less and equal to 0");
+            console.log("Flow parameter: minDataY <= 0, setting minY to 0");
         } else if (minDataY > 0 && minDataY <= 10) {
             minY = 0;
-            console.log("flow is greater than zero but less or equal to 10");
+            console.log("Flow parameter: minDataY > 0 && minDataY <= 10, setting minY to 0");
         } else if (minDataY > 10 && minDataY <= 50) {
             minY = Math.round(minDataY) - 2;
-            console.log("greater than 0 and less than 50");
+            console.log("Flow parameter: minDataY > 10 && minDataY <= 50, setting minY to", minY);
         } else if (minDataY > 50000) {
-            minY = (Math.round(minDataY/1000)*1000) - 5000;
-            console.log("greater than 50,000");
-        } else if (minDataY > 100000){
-            minY = (Math.round(minDataY/1000)*1000) - 10000;
-            console.log("greater than 100,000");
+            minY = (Math.round(minDataY / 1000) * 1000) - 5000;
+            console.log("Flow parameter: minDataY > 50000, setting minY to", minY);
+        } else if (minDataY > 100000) {
+            minY = (Math.round(minDataY / 1000) * 1000) - 10000;
+            console.log("Flow parameter: minDataY > 100000, setting minY to", minY);
         } else {
-            minY = minDataY - ((minDataY*0.1));
-            console.log("minus 10%");
+            minY = minDataY - (minDataY * 0.05);
+            console.log("Flow parameter: default case, setting minY to", minY);
         }
-        console.log("minY = ", minY);
 
-        // maxY = maxDataY + 10; // Example adjustment for Flow
         if (maxDataY > 0 && maxDataY <= 10) {
             maxY = Math.round(maxDataY) + 5;
-            console.log("greater and equal to 0 and less than 50");
+            console.log("Flow parameter: maxDataY > 0 && maxDataY <= 10, setting maxY to", maxY);
         } else if (maxDataY > 10 && maxDataY <= 50) {
             maxY = Math.round(maxDataY) + 5;
-            console.log("greater and equal to 0 and less than 50");
+            console.log("Flow parameter: maxDataY > 10 && maxDataY <= 50, setting maxY to", maxY);
         } else if (maxDataY > 50000) {
-            maxY = (Math.round(maxDataY/1000)*1000) + 5000;
-            console.log("greater than 50,000");
+            maxY = (Math.round(maxDataY / 1000) * 1000) + 5000;
+            console.log("Flow parameter: maxDataY > 50000, setting maxY to", maxY);
         } else if (maxDataY > 100000) {
-            maxY = (Math.round(maxDataY/1000)*1000) + 10000;
-            console.log("greater than 100,000");
+            maxY = (Math.round(maxDataY / 1000) * 1000) + 10000;
+            console.log("Flow parameter: maxDataY > 100000, setting maxY to", maxY);
         } else {
-            maxY = maxDataY + ((maxDataY*0.1)+5);
-            console.log("plus 10%");
+            maxY = maxDataY + (maxDataY * 0.05);
+            console.log("Flow parameter: default case, setting maxY to", maxY);
         }
-        console.log("maxY = ", maxY);
     } else {
         // Default adjustments for other parameter_id values
-        minY = minDataY - (minDataY*0.1); // Set minY to minDataY if no specific adjustment needed
-        maxY = maxDataY + (maxDataY*0.1); // Set maxY to maxDataY if no specific adjustment needed
+        minY = minDataY - (minDataY * 0.1);
+        maxY = maxDataY + (maxDataY * 0.1);
+        console.log("everything else", minY, maxY);
     }
 
     // Log adjusted minY and maxY after adjustments
@@ -574,11 +938,395 @@ function subtractHoursFromDate(date, hoursToSubtract) {
 }
 
 // Function to get current data time
-function plusHoursFromDate(date, hoursToSubtract) {
-    return new Date(date.getTime() + (hoursToSubtract * 60 * 60 * 1000));
+function addHoursFromDate(date, hoursToAdd) {
+    return new Date(date.getTime() + (hoursToAdd * 60 * 60 * 1000));
 }
 
-// Function to add days to a given date
-function addDaysToDate(date, days) {
-    return new Date(date.getTime() + (days * 24 * 60 * 60 * 1000));
+// Function to format date time to mm-dd-yyyy
+function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const formattedDate = date.toLocaleString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    return formattedDate;
+}
+
+// Function to create data table
+function createTable(data, floodLevel) {
+    // Sort data[0].data by 'x' in descending order
+    data[0].data.sort((a, b) => b.x - a.x);
+
+    // Initialize the table structure
+    let table = '<table id="gage_data"><thead><tr><th>Date Time</th><th>Value</th></tr></thead><tbody>';
+
+    let parameter_id = data[0].parameter_id;
+    console.log('parameter_id @ createTableWithoutFloodLevel: ', parameter_id);
+
+    // Iterate through each point in data[0].data
+    data[0].data.forEach(point => {
+        // Format the date based on the 'x' value
+        const date = new Date(point.x).toLocaleString();
+
+        let formattedValue = null;
+        if (point.y !== null) {
+            if (parameter_id === "Flow") {
+                formattedValue = point.y.toFixed(0);
+            } else {
+                formattedValue = point.y.toFixed(2);
+            }
+        } else {
+            formattedValue = 'N/A';
+        }
+        
+        // Determine if the current value exceeds the flood level
+        // console.log("exceedFloodLevel: ", formattedValue, floodLevel, typeof(formattedValue), typeof(floodLevel));
+        const exceedFloodLevel = parseFloat(formattedValue) > floodLevel;
+        console.log("exceedFloodLevel: ", exceedFloodLevel);
+
+        // Construct the table row with conditional class for text color
+        table += `<tr>
+                    <td>${date}</td>
+                    <td style="color: ${exceedFloodLevel ? 'red' : 'inherit'}">${formattedValue}</td>
+                  </tr>`;
+    });
+
+    // Close the table structure
+    table += '</tbody></table>';
+
+    // Return the complete HTML table
+    return table;
+}
+
+// Function to create data table without floodLevel
+function createTableWithoutFloodLevel(data) {
+    console.log('data @ createTableWithoutFloodLevel: ', data);
+
+    // Sort data[0].data by 'x' in descending order
+    data[0].data.sort((a, b) => b.x - a.x);
+
+    // Initialize the table structure
+    let table = '<table id="gage_data"><thead><tr><th>Date Time</th><th>Value</th></tr></thead><tbody>';
+
+    let parameter_id = data[0].parameter_id;
+    console.log('parameter_id @ createTableWithoutFloodLevel: ', parameter_id);
+
+    // Iterate through each point in data[0].data
+    data[0].data.forEach(point => {
+        // Format the date based on the 'x' value
+        const date = new Date(point.x).toLocaleString();
+
+        let formattedValue = null;
+        if (point.y !== null) {
+            if (parameter_id === "Flow") {
+                formattedValue = point.y.toFixed(0);
+            } else {
+                formattedValue = point.y.toFixed(2);
+            }
+        } else {
+            formattedValue = 'N/A';
+        }
+
+        // Construct the table row
+        table += `<tr>
+                    <td>${date}</td>
+                    <td>${formattedValue}</td>
+                  </tr>`;
+    });
+
+    // Close the table structure
+    table += '</tbody></table>';
+
+    // Return the complete HTML table
+    return table;
+}
+
+// Function to get flood level
+function getFloodLevel(floodLevelTimeSeries) {
+    let floodLevel = null;
+
+    // Check if floodLevelTimeSeries is not empty and the first element has a 'y' property
+    if (floodLevelTimeSeries.length > 0 && floodLevelTimeSeries[0].hasOwnProperty('y')) {
+        // Extract the y value from the first row
+        floodLevel = floodLevelTimeSeries[0].y;
+
+        // Check if floodLevel is null or undefined, set it to negative infinity
+        if (floodLevel === null || floodLevel === undefined) {
+            floodLevel = Infinity;
+        }
+
+        // Log the floodLevel value
+        console.log("floodLevel:", floodLevel); // Output: 24.999999999999996 or -Infinity if initially null/undefined
+    } else {
+        console.log("floodLevelTimeSeries is empty or does not contain 'y' property in the first row.");
+    }
+
+    return floodLevel;
+}
+
+// Function to get minY and maxY for dual axis chart
+function getInitialMinMaxYDualAxis(datasets, uniqueParameterIds) {
+    console.log("getInitialMinMaxYDualAxis for dual axis");
+
+    let minY = {
+        y0: Infinity,
+        y1: Infinity
+    };
+    let maxY = {
+        y0: -Infinity,
+        y1: -Infinity
+    };
+
+    // Arrays to store all yValues for each axis
+    let allYValuesY0 = [];
+    let allYValuesY1 = [];
+
+    console.log("Initial minY:", minY);
+    console.log("Initial maxY:", maxY);
+    console.log("Initial allYValuesY0:", allYValuesY0);
+    console.log("Initial allYValuesY1:", allYValuesY1);
+
+    datasets.forEach((dataset, datasetIndex) => {
+        console.log(`Processing dataset ${datasetIndex}:`, dataset);
+
+        if (dataset.hidden) {
+            console.log(`Dataset ${datasetIndex} is hidden, skipping.`);
+            return; // Skip hidden datasets
+        }
+
+        const parameterIndex = uniqueParameterIds.indexOf(dataset.parameter_id);
+        console.log(`parameterIndex for dataset ${datasetIndex}:`, parameterIndex);
+
+        dataset.data.forEach((dataPoint, dataPointIndex) => {
+            const yValue = parseFloat(dataPoint.y);
+            console.log(`Data point ${dataPointIndex} (yValue: ${yValue}) in dataset ${datasetIndex}`);
+
+            if (parameterIndex === 0) {
+                allYValuesY0.push(yValue); // Collect yValues for y0 axis
+                console.log(`Added ${yValue} to allYValuesY0`);
+            } else if (parameterIndex === 1) {
+                allYValuesY1.push(yValue); // Collect yValues for y1 axis
+                console.log(`Added ${yValue} to allYValuesY1`);
+            }
+        });
+    });
+
+    console.log("Final allYValuesY0:", allYValuesY0);
+    console.log("Final allYValuesY1:", allYValuesY1);
+
+    // Find min and max yValues for y0 axis
+    if (allYValuesY0.length > 0) {
+        minY.y0 = Math.min(...allYValuesY0);
+        maxY.y0 = Math.max(...allYValuesY0);
+        console.log('Updated minY.y0:', minY.y0);
+        console.log('Updated maxY.y0:', maxY.y0);
+    }
+
+    // Find min and max yValues for y1 axis
+    if (allYValuesY1.length > 0) {
+        minY.y1 = Math.min(...allYValuesY1);
+        maxY.y1 = Math.max(...allYValuesY1);
+        console.log('Updated minY.y1:', minY.y1);
+        console.log('Updated maxY.y1:', maxY.y1);
+    }
+
+    // Adjust minY and maxY based on the axis-specific logic if needed
+
+    console.log('Final minY:', minY);
+    console.log('Final maxY:', maxY);
+
+    // Return object with calculated minY and maxY for both y0 and y1 axes
+    return { minY, maxY };
+}
+
+// Function to display vertical datum and elevation
+function displayLocationData(data, data2, versionId) {
+    let verticalDatum = null;
+    let elevation = null;
+    if (versionId === "29") {
+        verticalDatum = data["vertical-datum"];
+        elevation = (data["elevation"] - data2["constant-value"]).toFixed(2);
+    } else {
+        verticalDatum = data["vertical-datum"];
+        elevation = (data["elevation"]).toFixed(2);
+    }
+
+    const locationDataDiv = document.getElementById("gage_control_04");
+    locationDataDiv.innerHTML += `Vertical Datum: ${verticalDatum}<br>Gage Zero: ${elevation} ft` + `<br>`;
+}
+
+// Function to display ngvd29 vertical datum
+function displayNgvd29Data(data, data2, versionId) {
+
+    let verticalDatum = null;
+    let elevation = null;
+    if (versionId === "29") {
+        verticalDatum = data["location-level-id"].slice(-6);
+        elevation = (data["constant-value"] - data["constant-value"]).toFixed(2);
+    } else {
+        if (data["constant-value"] < 900) {
+            verticalDatum = data["location-level-id"].slice(-6);
+            elevation = (data["constant-value"]).toFixed(2);
+        } else {
+            verticalDatum = data["location-level-id"].slice(-6);
+            elevation = "N/A";
+        }
+    }
+
+    const locationDataDiv = document.getElementById("gage_control_04");
+    locationDataDiv.innerHTML += `Vertical Datum: ${verticalDatum}<br>Gage Zero: ${elevation} ft`;
+}
+
+// Function to generate formatted time string for a given date
+function format6AmTargetTime(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}T06:00:00-05:00`;
+}
+
+// Function to find value at 6:00 AM from the datasets
+function findValueAt6Am(datasets, targetTimeString) {
+    // console.log("datasets @ findValueAt6Am ", datasets);
+
+    // Convert target time to UTC
+    const targetDate = new Date(targetTimeString);
+    const targetTimeUTC = targetDate.getTime();
+
+    // Extract parameterId from name
+    const name = datasets[0]?.name; // assuming name is consistent across datasets
+    const splitName = name.split('.');
+    const parameterId = splitName[1];
+
+    // Helper function to format date to 'mm-dd-yyyy hh24mi'
+    function formatDate(date) {
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        const hh = String(date.getHours()).padStart(2, '0');
+        const mi = String(date.getMinutes()).padStart(2, '0');
+        return `${mm}-${dd}-${yyyy} ${hh}${mi}`;
+    }
+
+    // Helper function to add comma as thousand separator
+    function addThousandSeparator(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // Iterate through datasets to find the corresponding value
+    for (let dataset of datasets) {
+        if (dataset.values && dataset.values.length > 0) {
+            const values = dataset.values;
+            const unit_id = dataset.units;
+            const result = values.find(entry => entry[0] === targetTimeUTC);
+            if (result && result[1] != null) {
+                const formattedTime = formatDate(targetDate);
+                let valueFormatted;
+
+                if (parameterId === "Stage" || parameterId === "Precip") {
+                    valueFormatted = result[1].toFixed(2);
+                } else if (parameterId === "Flow") {
+                    if (result[1] > 20) {
+                        valueFormatted = addThousandSeparator((Math.round(result[1] * 10) / 10).toFixed(0));
+                    } else {
+                        valueFormatted = addThousandSeparator(result[1].toFixed(0));
+                    }
+                } else {
+                    valueFormatted = result[1].toFixed(2);
+                }
+
+                return `${formattedTime} = ${valueFormatted} ${unit_id}`;
+            }
+        }
+    }
+
+    const formattedTime = formatDate(targetDate);
+    return `No value found for ${formattedTime} US/Central time.`;
+}
+
+// Main function to handle the process
+function processDataAndDisplay(datasets) {
+    // Check if there are multiple datasets
+    if (datasets.length > 1) {
+        document.getElementById('gage_control_03').innerHTML = "data not available for multiple time series";
+        return;
+    }
+    // Get today's date
+    const today = new Date();
+
+    // Get yesterday's date
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    // Construct the target time strings for 6:00 AM US/Central time for today and yesterday
+    const targetTimeStringToday = format6AmTargetTime(today);
+    const targetTimeStringYesterday = format6AmTargetTime(yesterday);
+
+    // Find values at the target times
+    const valueToday = findValueAt6Am(datasets, targetTimeStringToday);
+    const valueYesterday = findValueAt6Am(datasets, targetTimeStringYesterday);
+
+    // Display the results in the <div> with id "gage_control_03"
+    document.getElementById('gage_control_03').innerHTML = `
+        ${valueToday}<br>
+        ${valueYesterday}
+    `;
+}
+
+// Function to get minY and maxY for dual axis chart version 2
+function getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds) {
+    let minY = { y0: Infinity, y1: Infinity };
+    let maxY = { y0: -Infinity, y1: -Infinity };
+
+    datasets.forEach((dataset, datasetIndex) => {
+        if (!dataset.data || !Array.isArray(dataset.data)) {
+            console.log(`Dataset ${datasetIndex} has no valid data array.`);
+            return;
+        }
+
+        dataset.data.forEach((point, pointIndex) => {
+            if (typeof point.y !== 'number') {
+                console.log(`Point ${pointIndex} in dataset ${datasetIndex} has an invalid y value: ${point.y}`);
+                return;
+            }
+
+            const yAxisID = dataset.yAxisID;
+            if (yAxisID === uniqueParameterIds[0]) {
+                if (point.y < minY.y0) {
+                    minY.y0 = point.y;
+                    console.log(`Updated minY.y0 at dataset ${datasetIndex}, point ${pointIndex}: ${minY.y0}`);
+                }
+                if (point.y > maxY.y0) {
+                    maxY.y0 = point.y;
+                    console.log(`Updated maxY.y0 at dataset ${datasetIndex}, point ${pointIndex}: ${maxY.y0}`);
+                }
+            } else if (yAxisID === uniqueParameterIds[1]) {
+                if (point.y < minY.y1) {
+                    minY.y1 = point.y;
+                    console.log(`Updated minY.y1 at dataset ${datasetIndex}, point ${pointIndex}: ${minY.y1}`);
+                }
+                if (point.y > maxY.y1) {
+                    maxY.y1 = point.y;
+                    console.log(`Updated maxY.y1 at dataset ${datasetIndex}, point ${pointIndex}: ${maxY.y1}`);
+                }
+            } else {
+                console.log(`Dataset ${datasetIndex}, point ${pointIndex} has an invalid yAxisID: ${yAxisID}`);
+            }
+        });
+    });
+
+    // Set to null if no valid values were found
+    if (minY.y0 === Infinity) minY.y0 = null;
+    if (minY.y1 === Infinity) minY.y1 = null;
+    if (maxY.y0 === -Infinity) maxY.y0 = null;
+    if (maxY.y1 === -Infinity) maxY.y1 = null;
+
+    console.log('Final minY:', minY);
+    console.log('Final maxY:', maxY);
+
+    return { minY, maxY };
 }
