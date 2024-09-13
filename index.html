@@ -7,13 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chart JS Cloud</title>
     <meta name="Description" content="U.S. Army Corps of Engineers St. Louis District Home Page" />
-    <link rel="stylesheet" href="../../css/body.css" />
-    <link rel="stylesheet" href="stylesheets/style.css" />
-    <link rel="stylesheet" href="../../css/breadcrumbs.css" />
-    <link rel="stylesheet" href="../../css/jumpMenu.css" />
-    <script type="text/javascript" src="../../js/main.js"></script>
-    <!-- Add sidebar.css IF NOT LOAD SIDEBAR TEMPLATE -->
-    <link rel="stylesheet" href="../../css/sidebar.css" />
+    <link rel="stylesheet" href="css/body.css" />
+    <link rel="stylesheet" href="css/chart.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/breadcrumbs.css" />
+    <link rel="stylesheet" href="css/jumpMenu.css" />
+    <script type="text/javascript" src="js/main.js"></script>
     <!-- Include Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- Include the Chart.js library -->
@@ -90,7 +89,7 @@
                                     </script>
 
                                     <!-- loading spinner -->
-                                    <div id="loading" style="display: none;"><img src="../../images/loading4.gif"
+                                    <div id="loading" style="display: none;"><img src="images/loading.gif"
                                             style='height: 50px; width: 50px;' alt="Loading..." /></div>
 
                                     <!-- chart js -->
@@ -144,7 +143,7 @@
                                             <script>
                                                 document.addEventListener('DOMContentLoaded', () => {
                                                     // console.log("basin inside gage_control_02", basin);
-                                                    initializeBasinDropdown(basin);
+                                                    initializeBasinDropdown(basin, office);
                                                 });
                                             </script>
                                         </div>
@@ -194,42 +193,42 @@
     <footer id="footer">
         <!--Footer content populated here by script tag at end of body -->
     </footer>
-    <script src="../../../js/libraries/jQuery-3.3.6.min.js"></script>
+    <script src="/../js/libraries/jQuery-3.3.6.min.js"></script>
     <script defer>
         // When the document has loaded pull in the page header and footer skins
         $(document).ready(function () {
             // Change the v= to a different number to force clearing the cached version on the client browser
-            $('#header').load('../../templates/DISTRICT.header.html');
+            $('#header').load('templates/DISTRICT.header.html');
             if (basin == "Mississippi") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Mississippi.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Mississippi.html');
             } else if (basin == "Illinois") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Illinois.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Illinois.html');
             } else if (basin == "Missouri") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Missouri.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Missouri.html');
             } else if (basin == "Meramec") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Meramec.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Meramec.html');
             } else if (basin == "Tributaries") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Tributaries.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Tributaries.html');
             } else if (basin == "Mark Twain DO") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.MarkTwainDo.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.MarkTwainDo.html');
             } else if (basin == "Mark Twain") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.MarkTwain.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.MarkTwain.html');
             } else if (basin == "Wappapello") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Wappapello.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Wappapello.html');
             } else if (basin == "Shelbyville") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Shelbyville.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Shelbyville.html');
             } else if (basin == "Carlyle") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Carlyle.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Carlyle.html');
             } else if (basin == "Rend") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.Rend.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.Rend.html');
             } else if (basin == "Kaskaskia Nav") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.KaskaskiaNav.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.KaskaskiaNav.html');
             } else if (basin == "Water Quality") {
-                $('#sidebar').load('../../templates/DISTRICT.sidebar.WaterQuality.html');
+                $('#sidebar').load('templates/DISTRICT.sidebar.WaterQuality.html');
             } else {
-                // $('#sidebar').load('../../templates/DISTRICT.sidebar.html');
+                // $('#sidebar').load('templates/DISTRICT.sidebar.html');
             }
-            $('#footer').load('../../templates/DISTRICT.footer.html');
+            $('#footer').load('templates/DISTRICT.footer.html');
         })
     </script>
 </body>
@@ -237,7 +236,7 @@
 </html>
 
 <script>
-    function initializeBasinDropdown(basin) {
+    function initializeBasinDropdown(basin, office) {
         if (basin !== null) {
             const basins = [
                 "Mississippi",
@@ -344,7 +343,7 @@
                         selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
                 }
 
-                const newUrl = `https://wm.mvs.ds.usace.army.mil/district_templates/chart/public/chart.html?basin=${selectedBasin}&cwms_ts_id=${selectedTsis}`;
+                const newUrl = `https://wm.mvs.ds.usace.army.mil/district_templates/chart/index.html?office=${office}&basin=${selectedBasin}&cwms_ts_id=${selectedTsis}`;
                 window.location.href = newUrl;
             });
         }
