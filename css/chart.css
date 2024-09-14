@@ -35,7 +35,7 @@ canvas {
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: left;
-    background-color: #444444;
+    background-color: darkblue;
     color: white;
 	border: 1px solid #ddd;
 	padding: 5px;
@@ -110,3 +110,4 @@ label, input, select {
 #notice {
     width: 100%; 
 }
+

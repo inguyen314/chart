@@ -45,19 +45,11 @@
                                 <div class="content">
                                     <!-- Set Switch Menu Links -->
                                     <script>
-                                        // Calculate the document root
-                                        const documentRoot = window.location.protocol + "//" + window.location.host + "/";
-
-                                        // Determine the default value of cda based on documentRoot
-                                        const cdaDefault = (documentRoot === "https://wm.mvs.ds.usace.army.mil/") ? "internal" : "public";
-
-                                        console.log("cdaDefault: ", cdaDefault);
-
                                         // Extract URL parameters
                                         const urlParams = new URLSearchParams(window.location.search);
 
                                         // Get the value of a specific parameter, defaulting to cdaDefault
-                                        const param1Value = urlParams.get('cda') || cdaDefault;
+                                        const param1Value = urlParams.get('cda');
                                         const param2Value = urlParams.get('cwms_ts_id') || 'St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev';
                                         const param3Value = urlParams.get('cwms_ts_id_2');
                                         const param4Value = urlParams.get('cwms_ts_id_3');
@@ -67,7 +59,7 @@
                                         const param8Value = urlParams.get('cwms_ts_id_6');
                                         const param9Value = urlParams.get('lookback') || '96';
                                         const param10Value = urlParams.get('basin');
-                                        const param11Value = urlParams.get('office') || 'MVS';
+                                        const param11Value = urlParams.get('office');
                                         const param12Value = urlParams.get('lookforward') || '0';
 
                                         urlParams.forEach(function (value, key) {
@@ -75,7 +67,7 @@
                                         });
 
                                         var basin = urlParams.get('basin');
-                                        var cda = urlParams.get('cda') || cdaDefault;
+                                        var cda = urlParams.get('cda');
                                         var lookback = urlParams.get('lookback') || '96';
                                         var cwms_ts_id = urlParams.get('cwms_ts_id') || 'St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev';
                                         var cwms_ts_id_2 = urlParams.get('cwms_ts_id_2');
@@ -86,6 +78,17 @@
                                         var cwms_ts_id_7 = urlParams.get('cwms_ts_id_7');
                                         var office = urlParams.get('office');
                                         var lookforward = urlParams.get('lookforward') || '0';
+
+                                        // Calculate the document root
+                                        const documentRoot = window.location.protocol + "//" + window.location.host + "/";
+
+                                        // Determine the default value of cda based on documentRoot
+                                        const cdaDefault = (documentRoot === `https://wm.${office.toLowerCase()}.ds.usace.army.mil/`) ? "internal" : "public";
+
+                                        console.log("cdaDefault: ", cdaDefault);
+
+                                        cda = cdaDefault;
+                                        console.log("cda: ", cda);
                                     </script>
 
                                     <!-- loading spinner -->
@@ -94,6 +97,7 @@
 
                                     <!-- chart js -->
                                     <div id="chart"><canvas id="myChart" width="800" height="400"></canvas></div>
+                                    <script src="functions.js"></script>
                                     <script src="chart.js"></script>
                                     <!-- <script src="chart-dual-cda.js"></script> -->
 
@@ -127,7 +131,8 @@
                                             <br>
                                             <form id="numberFormForward">
                                                 <label for="numberInputForward">Lookforward Hours:</label>
-                                                <input type="numberForward" id="numberInputForward" name="numberInputForward" required>
+                                                <input type="numberForward" id="numberInputForward"
+                                                    name="numberInputForward" required>
                                                 <button type="submit">Update</button>
                                             </form>
                                             <script>
