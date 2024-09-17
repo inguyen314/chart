@@ -107,6 +107,15 @@ label, input, select {
     height: 200px;
     box-sizing: border-box; /* Include padding and border in the width and height */
 }
+#forecast {
+    width: 24%;
+    padding: 10px;
+    border: 1px solid #666666;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    height: 75px;
+    box-sizing: border-box; /* Include padding and border in the width and height */
+}
 #notice {
     width: 100%; 
 }

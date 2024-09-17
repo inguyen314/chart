@@ -31,19 +31,19 @@ document.addEventListener('DOMContentLoaded', function () {
      const currentDateTimeAddLookForward = addHoursFromDate(currentDateTime, lookforward);
      // console.log("currentDateTimeAddLookForward = ", currentDateTimeAddLookForward);
 
-    let cdaUrl = null;
+    let baseUrl = null;
     if (cda === "public") {
-        cdaUrl = "https://cwms-data.usace.army.mil/cwms-data";
+        baseUrl = `https://cwms-data.usace.army.mil/cwms-data`;
     } else if (cda === "internal") {
-        cdaUrl = "https://wm.mvs.ds.usace.army.mil:8243/mvs-data";
+        baseUrl = `https://wm.${office.toLowerCase()}.ds.usace.army.mil:8243/mvs-data`;
     } else {
-        cdaUrl = null;
+        baseUrl = null;
     }
 
     // Map each dataset to its corresponding URL
     const timeseriesUrl = validTsids.map(data => {
         const queryString = data.cwms_ts_id; // Assuming this is correct
-        return `${cdaUrl}/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTimeAddLookForward.toISOString()}&office=${office}`;
+        return `${baseUrl}/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTimeAddLookForward.toISOString()}&office=${office}`;
     });
     // console.log("timeseriesUrl = ", timeseriesUrl);
 
@@ -127,12 +127,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const levelIdEffectiveDate = "2024-01-01T08:00:00";
 
             // Define the URLs to fetch related data from
-            const url1 = `https://water.usace.army.mil/cwms-data/levels/${levelIdFlood}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url2 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMin}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url3 = `https://water.usace.army.mil/cwms-data/levels/${levelIdHingeMax}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url4 = `https://water.usace.army.mil/cwms-data/levels/${levelIdLwrp}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
-            const url5 = `https://water.usace.army.mil/cwms-data/locations/${locationId}?office=${office}`;
-            const url6 = `https://water.usace.army.mil/cwms-data/levels/${levelIdNgvd29}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url1 = `${baseUrl}/levels/${levelIdFlood}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url2 = `${baseUrl}/levels/${levelIdHingeMin}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url3 = `${baseUrl}/levels/${levelIdHingeMax}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url4 = `${baseUrl}/levels/${levelIdLwrp}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
+            const url5 = `${baseUrl}/locations/${locationId}?office=${office}`;
+            const url6 = `${baseUrl}/levels/${levelIdNgvd29}?office=${office}&effective-date=${levelIdEffectiveDate}&unit=ft`;
             // console.log('url1:', url1);
             // console.log('url2:', url2);
             // console.log('url3:', url3);

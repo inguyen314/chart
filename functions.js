@@ -182,22 +182,22 @@ function plotData(datasets) {
                 },
                 legend: {
                     display: true,
-                    onClick: function(e, legendItem, legend) {
+                    onClick: function (e, legendItem, legend) {
                         // Determine if there are multiple unique parameter IDs
                         if (uniqueParameterIds.length > 1) {
                             // console.log("onClick Dual Chart");
-                    
+
                             const index = legendItem.datasetIndex;
                             const meta = chart.getDatasetMeta(index);
                             const dataset = chart.data.datasets[index];
-                    
+
                             // Toggle visibility of the clicked dataset
                             dataset.hidden = !dataset.hidden;
                             const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
-                            
+
                             // Recalculate min and max Y values for visible datasets
                             const { minY, maxY } = getInitialMinMaxYDualAxis2(visibleDatasets, uniqueParameterIds);
-                    
+
                             // Update y-axes min and max
                             Object.keys(chart.options.scales).forEach(scale => {
                                 if (scale !== 'x' && minY[scale] !== undefined && maxY[scale] !== undefined) {
@@ -207,36 +207,36 @@ function plotData(datasets) {
                             });
                         } else {
                             // console.log("onClick Single Chart");
-                    
+
                             const index = legendItem.datasetIndex;
                             const dataset = chart.data.datasets[index];
-                    
+
                             // Toggle visibility of the clicked dataset
                             dataset.hidden = !dataset.hidden;
-                    
+
                             // Recalculate min and max Y values for all datasets
                             const { minY, maxY } = getInitialMinMaxY(chart.data.datasets);
-                    
+
                             // Update y-axis min and max
                             chart.options.scales.y.min = minY;
                             chart.options.scales.y.max = maxY;
                         }
-                    
+
                         // Update the chart after modifications
                         chart.update(datasets);
-                    }                    
+                    }
                 },
-                beforeUpdate: function(chart) {
+                beforeUpdate: function (chart) {
                     // Check if there are multiple unique parameter IDs
                     if (uniqueParameterIds.length > 1) {
                         // console.log("beforeUpdate Dual Chart");
-                
+
                         // Filter visible datasets
                         const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
-                
+
                         // Recalculate min and max Y values for visible datasets
                         const { minY, maxY } = getInitialMinMaxYDualAxis2(visibleDatasets, uniqueParameterIds);
-                
+
                         // Update y-axes min and max for each scale
                         Object.keys(chart.options.scales).forEach(scaleKey => {
                             if (scaleKey !== 'x' && minY[scaleKey] !== undefined && maxY[scaleKey] !== undefined) {
@@ -246,22 +246,22 @@ function plotData(datasets) {
                         });
                     } else {
                         // console.log("beforeUpdate Single Chart");
-                
+
                         // Filter visible datasets
                         const visibleDatasets = chart.data.datasets.filter(dataset => !dataset.hidden);
-                
+
                         // Recalculate min and max Y values for visible datasets
                         const { minY, maxY } = getInitialMinMaxY(visibleDatasets);
-                
+
                         // Update y-axis min and max
                         chart.options.scales.y.min = minY;
                         chart.options.scales.y.max = maxY;
                     }
-                
+
                     // Log the updated minY and maxY values for debugging
                     // console.log('Updated minY:', minY);
                     // console.log('Updated maxY:', maxY);
-                }                
+                }
             }
         }
     });
@@ -450,7 +450,7 @@ function createTable(data, floodLevel) {
         } else {
             formattedValue = 'N/A';
         }
-        
+
         // Determine if the current value exceeds the flood level
         // console.log("exceedFloodLevel: ", formattedValue, floodLevel, typeof(formattedValue), typeof(floodLevel));
         const exceedFloodLevel = parseFloat(formattedValue) > floodLevel;
@@ -798,3 +798,192 @@ function getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds) {
 
     return { minY, maxY };
 }
+
+
+function initializeBasinDropdown(basin, office) {
+    if (basin !== null) {
+        const basins = [
+            "Mississippi",
+            "Illinois",
+            "Missouri",
+            "Meramec",
+            "Tributaries",
+            "Mark Twain DO",
+            "Mark Twain",
+            "Wappapello",
+            "Shelbyville",
+            "Carlyle",
+            "Rend",
+            "Kaskaskia Nav",
+            "Water Quality"
+        ];
+
+        console.log('basins: ', basins);
+
+        const container = document.getElementById('gage_control_02');
+        if (!container) {
+            console.error('Container with id "gage_control_02" not found');
+            return;
+        }
+
+        // Create and append label
+        const label = document.createElement('label');
+        label.textContent = 'Select a Basin';
+        container.appendChild(label);
+
+        // Create and append dropdown
+        const dropdown = document.createElement('select');
+        dropdown.id = 'basinDropdown';
+        container.appendChild(dropdown);
+
+        // Create and append submit button
+        const submitButton = document.createElement('button');
+        submitButton.id = 'submitButton';
+        submitButton.textContent = 'Submit';
+        container.appendChild(submitButton);
+
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        basins.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item;
+            option.text = item;
+            dropdown.add(option);
+        });
+
+        const selectedBasin = getQueryParameter('basin') || basin;
+        if (selectedBasin) {
+            dropdown.value = selectedBasin;
+        }
+
+        submitButton.addEventListener('click', () => {
+            const selectedBasin = dropdown.value;
+
+            let selectedTsis = null;
+            switch (selectedBasin) {
+                case "Mississippi":
+                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
+                    break;
+                case "Illinois":
+                    selectedTsis = "Meredosia-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev";
+                    break;
+                case "Missouri":
+                    selectedTsis = "St Charles-Missouri.Stage.Inst.30Minutes.0.lrgsShef-rev";
+                    break;
+                case "Meramec":
+                    selectedTsis = "Eureka-Meramec.Flow.Inst.30Minutes.0.RatingUSGS";
+                    break;
+                case "Tributaries":
+                    selectedTsis = "Troy-Cuivre.Flow.Inst.15Minutes.0.RatingUSGS";
+                    break;
+                case "Mark Twain DO":
+                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
+                    break;
+                case "Mark Twain":
+                    selectedTsis = "Mark Twain Lk-Salt.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Wappapello":
+                    selectedTsis = "Wappapello Lk-St Francis.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Shelbyville":
+                    selectedTsis = "Lk Shelbyville-Kaskaskia.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Carlyle":
+                    selectedTsis = "Carlyle Lk-Kaskaskia.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Rend":
+                    selectedTsis = "Rend Lk-Big Muddy.Stage.Inst.30Minutes.0.29";
+                    break;
+                case "Kaskaskia Nav":
+                    selectedTsis = "Venedy Station-Kaskaskia.Flow.Inst.15Minutes.0.RatingUSGS";
+                    break;
+                case "Water Quality":
+                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
+                    break;
+                default:
+                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
+            }
+
+            const newUrl = `https://wm.mvs.ds.usace.army.mil/district_templates/chart/index.html?office=${office}&basin=${selectedBasin}&cwms_ts_id=${selectedTsis}`;
+            window.location.href = newUrl;
+        });
+    }
+}
+
+function netmissForecast(cwms_ts_id, cwms_ts_id_2) {
+    // Get the container element by its ID
+    const container = document.getElementById('forecast');
+
+    if (container) {
+        // Clear any existing content in the container (optional)
+        container.innerHTML = '';
+
+        // Initialize a flag to check if any case matches
+        let linkCreated = false;
+
+        // Create a link element
+        const link = document.createElement('a');
+
+        // Determine the URL based on cwms_ts_id
+        switch (cwms_ts_id) {
+            case "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=St Louis-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                linkCreated = true;
+                break;
+            case "Chester-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Chester-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Chester-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                linkCreated = true;
+                break;
+            case "Cape Girardeau-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Cape Girardeau-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Cape Girardeau-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                linkCreated = true;
+                break;
+            case "LD 24 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=LD 24 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=LD 24 TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                linkCreated = true;
+                break;
+            case "LD 25 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=LD 25 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=LD 25 TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                linkCreated = true;
+                break;
+            case "Mel Price TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Mel Price TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Mel Price TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                linkCreated = true;
+                break;
+            // Add more cases here if needed
+            default:
+                linkCreated = false;
+                break;
+        }
+
+        // Only create and append the image if link was created
+        if (linkCreated) {
+            // Create an image element
+            const img = document.createElement('img');
+            img.src = 'images/forecast.png';  // Replace with the actual path to your image
+            img.alt = 'Forecast Image';  // Optional: Provide an alt text for the image
+            img.width = 50;
+            img.height = 50;
+
+            // Append the image to the link
+            link.appendChild(img);
+
+            // Append the link (which contains the image) to the container
+            container.appendChild(link);
+
+            // Ensure the container is visible
+            container.style.display = 'block';
+        } else {
+            // Hide the container if no valid cwms_ts_id matched
+            container.style.display = 'none';
+        }
+    } else {
+        console.error('Container element with ID "forecast" not found.');
+    }
+}
+
+
+
