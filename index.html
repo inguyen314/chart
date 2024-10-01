@@ -38,7 +38,7 @@
                     <div id="topPane" class="col-md backend-cp-collapsible">
                         <div class="box-usace">
                             <h2 class="box-header-striped">
-                                <span class="titleLabel title">Chart JS Macro</span>
+                                <span class="titleLabel title"></span>
                                 <span class="rss"></span>
                             </h2>
                             <div class="box-content" style="background-color:white;margin:auto">
@@ -79,6 +79,16 @@
                                         var office = urlParams.get('office');
                                         var lookforward = urlParams.get('lookforward') || '0';
 
+                                        // Extract text before the first period
+                                        const cwms_ts_id_before_period = cwms_ts_id.split('.')[0];
+
+                                        // Update the title
+                                        const titleElement = document.querySelector('.titleLabel.title');
+                                        if (titleElement) {
+                                            titleElement.textContent += `${cwms_ts_id_before_period}`;
+                                            console.log('Title updated to: ', titleElement.textContent);
+                                        }
+
                                         // Calculate the document root
                                         const documentRoot = window.location.protocol + "//" + window.location.host + "/";
 
@@ -98,7 +108,7 @@
                                             style='height: 50px; width: 50px;' alt="Loading..." /></div>
 
                                     <!-- chart js -->
-                                    <div id="chart"><canvas id="myChart" width="800" height="400"></canvas></div>
+                                    <div id="chart"><canvas id="myChart" width="800" height="450"></canvas></div>
                                     <script src="functions.js"></script>
                                     <script src="chart.js"></script>
                                     <!-- <script src="chart-dual-cda.js"></script> -->
