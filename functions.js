@@ -405,9 +405,17 @@ function subtractHoursFromDate(date, hoursToSubtract) {
     return new Date(date.getTime() - (hoursToSubtract * 60 * 60 * 1000));
 }
 
+function subtractDaysFromDate(date, daysToSubtract) {
+    return new Date(date.getTime() - (daysToSubtract * 24 * 60 * 60 * 1000));
+}
+
 // Function to get current data time
 function addHoursFromDate(date, hoursToAdd) {
     return new Date(date.getTime() + (hoursToAdd * 60 * 60 * 1000));
+}
+
+function addDaysFromDate(date, daysToAdd) {
+    return new Date(date.getTime() + (daysToAdd * 24 * 60 * 60 * 1000));
 }
 
 // Function to format date time to mm-dd-yyyy
@@ -930,27 +938,27 @@ function netmissForecast(cwms_ts_id, cwms_ts_id_2) {
         // Determine the URL based on cwms_ts_id
         switch (cwms_ts_id) {
             case "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
-                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=St Louis-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=St Louis-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=4';
                 linkCreated = true;
                 break;
             case "Chester-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
-                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Chester-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Chester-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Chester-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Chester-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=4';
                 linkCreated = true;
                 break;
             case "Cape Girardeau-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
-                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Cape Girardeau-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Cape Girardeau-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Cape Girardeau-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Cape Girardeau-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=4';
                 linkCreated = true;
                 break;
             case "LD 24 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
-                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=LD 24 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=LD 24 TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=LD 24 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=LD 24 TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=4';
                 linkCreated = true;
                 break;
             case "LD 25 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
-                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=LD 25 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=LD 25 TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=LD 25 TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=LD 25 TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=4';
                 linkCreated = true;
                 break;
             case "Mel Price TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev":
-                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Mel Price TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Mel Price TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=96';
+                link.href = 'index.html?basin=Mississippi&office=MVS&cwms_ts_id=Mel Price TW-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev&cwms_ts_id_2=Mel Price TW-Mississippi.Stage.Inst.~1Day.0.netmiss-fcst&lookforward=4';
                 linkCreated = true;
                 break;
             // Add more cases here if needed

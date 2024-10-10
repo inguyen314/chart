@@ -57,7 +57,7 @@
                                         const param6Value = urlParams.get('cwms_ts_id_5');
                                         const param7Value = urlParams.get('cwms_ts_id_6');
                                         const param8Value = urlParams.get('cwms_ts_id_6');
-                                        const param9Value = urlParams.get('lookback') || '96';
+                                        const param9Value = urlParams.get('lookback') || '4';
                                         const param10Value = urlParams.get('basin');
                                         const param11Value = urlParams.get('office');
                                         const param12Value = urlParams.get('lookforward') || '0';
@@ -68,7 +68,7 @@
 
                                         var basin = urlParams.get('basin');
                                         var cda = urlParams.get('cda');
-                                        var lookback = urlParams.get('lookback') || '96';
+                                        var lookback = urlParams.get('lookback') || '4';
                                         var cwms_ts_id = urlParams.get('cwms_ts_id') || 'St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev';
                                         var cwms_ts_id_2 = urlParams.get('cwms_ts_id_2');
                                         var cwms_ts_id_3 = urlParams.get('cwms_ts_id_3');
@@ -129,7 +129,7 @@
                                         <!-- date input -->
                                         <div id="gage_control_01">
                                             <form id="numberForm">
-                                                <label for="numberInput">Lookback Hours:</label>
+                                                <label for="numberInput">Lookback Days:</label>
                                                 <input type="number" id="numberInput" name="numberInput" required>
                                                 <button type="submit">Update</button>
                                             </form>
@@ -142,7 +142,7 @@
                                             </script>
                                             <br>
                                             <form id="numberFormForward">
-                                                <label for="numberInputForward">Lookforward Hours:</label>
+                                                <label for="numberInputForward">Lookforward Days:</label>
                                                 <input type="numberForward" id="numberInputForward"
                                                     name="numberInputForward" required>
                                                 <button type="submit">Update</button>

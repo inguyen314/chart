@@ -31,6 +31,14 @@ document.addEventListener('DOMContentLoaded', function () {
      const currentDateTimeAddLookForward = addHoursFromDate(currentDateTime, lookforward);
      // console.log("currentDateTimeAddLookForward = ", currentDateTimeAddLookForward);
 
+     // Subtract thirty hours from current date and time
+    const currentDateTimeMinusLookBackDays = subtractDaysFromDate(currentDateTime, lookback);
+    // console.log("currentDateTimeMinusLookBack = ", currentDateTimeMinusLookBack);
+
+     // Add thirty hours from current date and time
+     const currentDateTimeAddLookForwardDays = addDaysFromDate(currentDateTime, lookforward);
+     // console.log("currentDateTimeAddLookForward = ", currentDateTimeAddLookForward);
+
     let baseUrl = null;
     if (cda === "public") {
         baseUrl = `https://cwms-data.usace.army.mil/cwms-data`;
@@ -43,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Map each dataset to its corresponding URL
     const timeseriesUrl = validTsids.map(data => {
         const queryString = data.cwms_ts_id; // Assuming this is correct
-        return `${baseUrl}/timeseries?name=${queryString}&begin=${currentDateTimeMinusLookBack.toISOString()}&end=${currentDateTimeAddLookForward.toISOString()}&office=${office}`;
+        return `${baseUrl}/timeseries?page-size=8000&name=${queryString}&begin=${currentDateTimeMinusLookBackDays.toISOString()}&end=${currentDateTimeAddLookForwardDays.toISOString()}&office=${office}`;
     });
     // console.log("timeseriesUrl = ", timeseriesUrl);
 
