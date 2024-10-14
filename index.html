@@ -99,7 +99,10 @@
 
                                         console.log("cdaDefault: ", cdaDefault);
 
-                                        cda = cdaDefault;
+                                        if (cda === null) {
+                                            cda = cdaDefault;
+                                        }
+
                                         console.log("cda: ", cda);
                                     </script>
 
@@ -180,6 +183,13 @@
                                             </script>
                                         </div>
                                     </div>
+                                    <div id="switchCda">
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', () => {
+                                                addSwitchCdaLink(office, basin, cwms_ts_id);
+                                            });
+                                        </script>
+                                    </div>
                                     <!-- data table -->
                                     <div id="data_table"></div>
                                 </div>
@@ -211,6 +221,7 @@
                         });
                         // Basin Control
                     </script>
+
                 </div>
             </div>
             <button id="returnTop" title="Return to Top of Page">Top</button>

@@ -993,5 +993,56 @@ function netmissForecast(cwms_ts_id, cwms_ts_id_2) {
     }
 }
 
+function addSwitchCdaLink(office, basin, cwms_ts_id){
+    // Find the div element by its ID
+    const switchCdaDiv = document.getElementById('switchCda');
+    
+    // Create a new anchor (link) element
+    const link = document.createElement('a');
+    
+    // Set the text for the link
+    link.textContent = "Switch Public API";
+    
+    // Set the href attribute (you can set it to your desired URL)
+    link.href = "index.html?" + "office=" + office + "&basin=" + basin + "&cwms_ts_id=" + cwms_ts_id + "&cda=public"; // This makes it a placeholder link, replace "#" with the actual URL if needed
+    
+    // Add the link to the div
+    switchCdaDiv.appendChild(link);
+}
 
+function updateCdaLinks(office, basin, cwms_ts_id, cda) {
+    // Select all anchor tags inside div elements with the class 'lvl0 listItem'
+    const anchors = document.querySelectorAll('.lvl0.listItem a');
 
+    // Loop through each anchor and update the href
+    anchors.forEach(anchor => {
+        // Get the current href
+        let currentHref = anchor.getAttribute('href');
+
+        // Create a URL object to easily manipulate the query parameters
+        let url = new URL(currentHref, window.location.origin);
+
+        // Check if "index.html" exists in the path and prepend "district_templates/chart/"
+        if (url.pathname.endsWith('index.html')) {
+            url.pathname = 'district_templates/chart' + url.pathname;
+        }
+
+        // Create or update the search parameters
+        let params = new URLSearchParams(url.search);
+
+        // Update or append 'office', 'basin', 'cwms_ts_id', and 'cda' parameters
+        if (office) params.set('office', office);
+        if (basin) params.set('basin', basin);
+        if (cda) {
+            if (params.has('cda')) {
+                params.set('cda', cda); // Update existing 'cda' parameter
+            } else {
+                params.append('cda', cda); // Add new 'cda' parameter if it doesn't exist
+            }
+        }
+
+        // Set the updated search params and apply the new href back to the anchor
+        url.search = params.toString(); // Update the search params
+        anchor.setAttribute('href', url.toString()); // Set new URL to anchor
+    });
+}
