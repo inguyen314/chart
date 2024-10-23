@@ -993,19 +993,46 @@ function netmissForecast(cwms_ts_id, cwms_ts_id_2) {
     }
 }
 
-function addSwitchCdaLink(office, basin, cwms_ts_id){
+function addSwitchCdaLink(office, basin, cwms_ts_id, cda) {
     // Find the div element by its ID
     const switchCdaDiv = document.getElementById('switchCda');
     
     // Create a new anchor (link) element
     const link = document.createElement('a');
     
-    // Set the text for the link
-    link.textContent = "Switch Public API";
+    // Set initial text, href, and style based on the current API type
+    if (cda === 'public') {
+        // If on Public API, set text to switch to Internal API and background to green
+        link.textContent = "Switch to Internal API";
+        link.href = "index.html?" + "office=" + office + "&basin=" + basin + "&cwms_ts_id=" + cwms_ts_id + "&cda=internal";
+        link.style.backgroundColor = "#4CAF50";  // Green background
+    } else {
+        // If on Internal API, set text to switch to Public API and background to dark blue
+        link.textContent = "Switch to Public API";
+        link.href = "index.html?" + "office=" + office + "&basin=" + basin + "&cwms_ts_id=" + cwms_ts_id + "&cda=public";
+        link.style.backgroundColor = "darkblue";  // Dark blue background
+    }
     
-    // Set the href attribute (you can set it to your desired URL)
-    link.href = "index.html?" + "office=" + office + "&basin=" + basin + "&cwms_ts_id=" + cwms_ts_id + "&cda=public"; // This makes it a placeholder link, replace "#" with the actual URL if needed
+    // Apply other inline CSS to style it as a modern button
+    link.style.display = "inline-block";
+    link.style.padding = "10px 20px";
+    link.style.color = "white";
+    link.style.textAlign = "center";
+    link.style.textDecoration = "none";
+    link.style.borderRadius = "5px";
+    link.style.fontSize = "16px";
+    link.style.transition = "background-color 0.3s";
+    link.style.marginBottom = "20px";  // Set margin bottom to 20px
     
+    // Add a hover effect
+    link.onmouseover = function() {
+        link.style.backgroundColor = "#45a049"; // Hover effect - green color on hover
+    };
+    link.onmouseout = function() {
+        // Reset background color based on the current API type
+        link.style.backgroundColor = cda === 'public' ? "#4CAF50" : "darkblue";  // Green for Internal API, dark blue for Public API
+    };
+
     // Add the link to the div
     switchCdaDiv.appendChild(link);
 }
