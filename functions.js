@@ -140,7 +140,11 @@ function plotData(datasets) {
                             const current_hour_utc = date.getUTCHours() === 0 ? 24 : date.getUTCHours();
                             const DaylightSavingTime = isDaylightSavingTime(date) ? 5 : 6;
                             const current_hour_cst = current_hour_utc - DaylightSavingTime;
-
+                        
+                            // Create an array of day abbreviations
+                            const dayAbbreviations = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+                            const dayOfWeek = dayAbbreviations[date.getUTCDay()]; // Get the day abbreviation
+                        
                             if (current_hour_cst === 6 || current_hour_cst === 12 || current_hour_cst === 18) {
                                 return new Intl.DateTimeFormat('en-US', {
                                     hour: 'numeric',
@@ -149,7 +153,7 @@ function plotData(datasets) {
                                     timeZone: 'America/Chicago'
                                 }).format(new Date(value));
                             } else if (current_hour_cst === 0) {
-                                return new Intl.DateTimeFormat('en-US', {
+                                return `${dayOfWeek} ` + new Intl.DateTimeFormat('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -157,7 +161,7 @@ function plotData(datasets) {
                                     timeZone: 'America/Chicago',
                                 }).format(new Date(value));
                             }
-                        },
+                        },                        
                         maxRotation: 90,
                         minRotation: 90,
                     },
@@ -806,7 +810,6 @@ function getInitialMinMaxYDualAxis2(datasets, uniqueParameterIds) {
 
     return { minY, maxY };
 }
-
 
 function initializeBasinDropdown(basin, office) {
     if (basin !== null) {
