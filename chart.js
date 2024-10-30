@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Display the loading indicator
-    const loadingIndicator = document.getElementById('loading');
+    // Display the loading_chart indicator
+    const loadingIndicator = document.getElementById('loading_chart');
     loadingIndicator.style.display = 'block';
 
     // Define your tsids
