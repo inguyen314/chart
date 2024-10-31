@@ -1380,96 +1380,54 @@ function initializeBasinDropdown(basin, office) {
             "Water Quality"
         ];
 
-        console.log('basins: ', basins);
-
         const container = document.getElementById('gage_control_02');
         if (!container) {
             console.error('Container with id "gage_control_02" not found');
             return;
         }
 
-        // Create and append label
-        const label = document.createElement('label');
-        label.textContent = 'Select a Basin';
-        container.appendChild(label);
+        container.innerHTML = `
+            <div class="basin-dropdown-container">
+                <label for="basinDropdown" class="dropdown-label">Select a Basin</label>
+                <select id="basinDropdown" class="basin-dropdown">
+                    ${basins.map(item => `<option value="${item}">${item}</option>`).join('')}
+                </select>
+                <button id="submitButton" class="submit-button">Submit</button>
+            </div>
+        `;
 
-        // Create and append dropdown
-        const dropdown = document.createElement('select');
-        dropdown.id = 'basinDropdown';
-        container.appendChild(dropdown);
+        const dropdown = document.getElementById('basinDropdown');
+        const submitButton = document.getElementById('submitButton');
 
-        // Create and append submit button
-        const submitButton = document.createElement('button');
-        submitButton.id = 'submitButton';
-        submitButton.textContent = 'Submit';
-        container.appendChild(submitButton);
-
-        function getQueryParameter(name) {
+        const getQueryParameter = (name) => {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
-        }
-
-        basins.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item;
-            option.text = item;
-            dropdown.add(option);
-        });
+        };
 
         const selectedBasin = getQueryParameter('basin') || basin;
-        if (selectedBasin) {
-            dropdown.value = selectedBasin;
-        }
+        if (selectedBasin) dropdown.value = selectedBasin;
 
         submitButton.addEventListener('click', () => {
             const selectedBasin = dropdown.value;
 
-            let selectedTsis = null;
-            switch (selectedBasin) {
-                case "Mississippi":
-                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
-                    break;
-                case "Illinois":
-                    selectedTsis = "Meredosia-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev";
-                    break;
-                case "Missouri":
-                    selectedTsis = "St Charles-Missouri.Stage.Inst.30Minutes.0.lrgsShef-rev";
-                    break;
-                case "Meramec":
-                    selectedTsis = "Eureka-Meramec.Flow.Inst.30Minutes.0.RatingUSGS";
-                    break;
-                case "Tributaries":
-                    selectedTsis = "Troy-Cuivre.Flow.Inst.15Minutes.0.RatingUSGS";
-                    break;
-                case "Mark Twain DO":
-                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
-                    break;
-                case "Mark Twain":
-                    selectedTsis = "Mark Twain Lk-Salt.Stage.Inst.30Minutes.0.29";
-                    break;
-                case "Wappapello":
-                    selectedTsis = "Wappapello Lk-St Francis.Stage.Inst.30Minutes.0.29";
-                    break;
-                case "Shelbyville":
-                    selectedTsis = "Lk Shelbyville-Kaskaskia.Stage.Inst.30Minutes.0.29";
-                    break;
-                case "Carlyle":
-                    selectedTsis = "Carlyle Lk-Kaskaskia.Stage.Inst.30Minutes.0.29";
-                    break;
-                case "Rend":
-                    selectedTsis = "Rend Lk-Big Muddy.Stage.Inst.30Minutes.0.29";
-                    break;
-                case "Kaskaskia Nav":
-                    selectedTsis = "Venedy Station-Kaskaskia.Flow.Inst.15Minutes.0.RatingUSGS";
-                    break;
-                case "Water Quality":
-                    selectedTsis = "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw";
-                    break;
-                default:
-                    selectedTsis = "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
-            }
+            const basinMap = {
+                "Mississippi": "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev",
+                "Illinois": "Meredosia-Illinois.Stage.Inst.30Minutes.0.lrgsShef-rev",
+                "Missouri": "St Charles-Missouri.Stage.Inst.30Minutes.0.lrgsShef-rev",
+                "Meramec": "Eureka-Meramec.Flow.Inst.30Minutes.0.RatingUSGS",
+                "Tributaries": "Troy-Cuivre.Flow.Inst.15Minutes.0.RatingUSGS",
+                "Mark Twain DO": "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw",
+                "Mark Twain": "Mark Twain Lk-Salt.Stage.Inst.30Minutes.0.29",
+                "Wappapello": "Wappapello Lk-St Francis.Stage.Inst.30Minutes.0.29",
+                "Shelbyville": "Lk Shelbyville-Kaskaskia.Stage.Inst.30Minutes.0.29",
+                "Carlyle": "Carlyle Lk-Kaskaskia.Stage.Inst.30Minutes.0.29",
+                "Rend": "Rend Lk-Big Muddy.Stage.Inst.30Minutes.0.29",
+                "Kaskaskia Nav": "Venedy Station-Kaskaskia.Flow.Inst.15Minutes.0.RatingUSGS",
+                "Water Quality": "Mark Twain Lk TW-Salt.Conc-DO.Inst.15Minutes.0.lrgsShef-raw"
+            };
 
-            const newUrl = `https://wm.mvs.ds.usace.army.mil/district_templates/chart/index.html?office=${office}&basin=${selectedBasin}&cwms_ts_id=${selectedTsis}`;
+            const selectedTsis = basinMap[selectedBasin] || "St Louis-Mississippi.Stage.Inst.30Minutes.0.lrgsShef-rev";
+            const newUrl = `?office=${office}&basin=${selectedBasin}&cwms_ts_id=${selectedTsis}`;
             window.location.href = newUrl;
         });
     }
